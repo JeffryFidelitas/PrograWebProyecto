@@ -19,7 +19,7 @@ public class CitaController : Controller
     [HttpPost]
     public IActionResult Create([Bind("TipoAuto", "Fecha", "Hora")] Cita cita)
     {
-        return View();
+        return View(cita);
     }
 
     [HttpGet]

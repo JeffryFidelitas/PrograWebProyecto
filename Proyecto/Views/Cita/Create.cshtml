@@ -20,7 +20,7 @@
     </div>
     <div class="form-group d-flex flex-column" style="gap: 5px">
         <label asp-for="Fecha"></label>
-        <input type="date" asp-for="Fecha" id="Fecha" class="form-control" onchange="getAvailableTimes();">
+        <input type="date" asp-for="Fecha" min="@DateTime.Now.ToString("yyyy-MM-dd")" id="Fecha" class="form-control" onchange="getAvailableTimes(null);">
         <span asp-validation-for="Fecha" class="text-danger"></span>
     </div>
     <div class="form-group d-flex flex-column">
@@ -30,34 +30,46 @@
         <span asp-validation-for="Hora" class="text-danger"></span>
     </div>
     <div class="form-group mt-3">
-        <input type="submit" class="btn btn-success" value="Guardar" />
+        <input type="submit" class="btn btn-success" id="Guardar" disabled value="Guardar" />
     </div>
 }
 
-<script>
-    function getAvailableTimes() {
-        $("#HoraError").hide();
-        $.ajax({
-            url: "/Cita/AvailableTimes",
-            type: "GET",
-            dataType: "json",
-            data: { date: $("#Fecha").val() },
-            success: function (response) {
-                $("#Hora").empty();
-                if (response['times'].length == 0) {
-                    $("#Hora").hide();
+@section Scripts {
+    <script>
+        function getAvailableTimes(selectedTime) {
+            $("#HoraError").hide();
+            $("#Guardar").prop("disabled",true);
+            $.ajax({
+                url: "/Cita/AvailableTimes",
+                type: "GET",
+                dataType: "json",
+                data: { date: $("#Fecha").val() },
+                success: function (response) {
+                    $("#Hora").empty();
+                    if (response['times'].length == 0) {
+                        $("#Hora").hide();
+                        $("#HoraError").show();
+                    }
+                    else {
+                        $("#Hora").show();
+                        $("#Guardar").prop("disabled",false);
+                    }
+                    response['times'].forEach(time => {
+                        $("#Hora").append(new Option(time, time));
+                    });
+                    if (selectedTime != null){
+                        $("#Hora").val(selectedTime);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
                     $("#HoraError").show();
+                    $("#Guardar").prop("disabled",true);
                 }
-                else
-                    $("#Hora").show();
-                response['times'].forEach(time => {
-                    $("#Hora").append(new Option(time, time));
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error(error);
-                $("#HoraError").show();
-            }
+            });
+        }
+        $(document).ready(function () {
+            getAvailableTimes("@Model.Hora.ToString("h:mm tt")");
         });
-    }
-</script>
+    </script>
+}
