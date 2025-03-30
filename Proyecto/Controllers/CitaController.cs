@@ -19,7 +19,16 @@ public class CitaController : Controller
     [HttpGet]
     public JsonResult AvailableTimes(string date)
     {
-        List<string> AvailableTimes = ["7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"];
-        return Json(new { times = AvailableTimes });
+        if (DateTime.TryParse(date, out DateTime parsedDate))
+        {
+            List<string> AvailableTimes = ["7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"];
+            List<Cita> existing_citas = _context.Citas.Where(c => c.FechaHora.Date == parsedDate.Date).ToList();
+
+            foreach (Cita cita in existing_citas)
+                AvailableTimes.Remove(cita.FechaHora.ToString("h:mm tt"));
+
+            return Json(new { times = AvailableTimes });
+        }
+        return Json(new { times = (List<string>) [] });
     }
 }
