@@ -1,0 +1,35 @@
+# Ignore Visual Studio specific files
+.vs/
+
+# Ignore build outputs
+Proyecto/bin/
+Proyecto/obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs and debug
+*.log
+
+# Ignore NuGet packages
+packages/
+
+# Ignore Rider/JetBrains IDE files
+.idea/
+*.sln.iml
+
+# Ignore temporary files
+*.tmp
+*.cache
+*.config
+*.csproj.user
+
+# Ignore published files
+publish/
+
+# Ignore secrets and environment settings
+secrets.json
+
