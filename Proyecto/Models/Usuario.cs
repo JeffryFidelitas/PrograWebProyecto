@@ -21,11 +21,11 @@ namespace Proyecto.Models
         public string? Clave { get; set; }
 
         [Required(ErrorMessage = "Rol es un campo requerido"), Display(Name = "Rol")]
-        public roles Rol { get; set; }
+        public Roles Rol { get; set; }
 
         public virtual ImmutableArray<Cita> citas { get; set; }
     }
-    public enum roles {
+    public enum Roles {
         Administrador,
         Cliente
     }

@@ -8,7 +8,7 @@ namespace Proyecto.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Tipo de auto es un campo requerido"), Display(Name = "Tipo de Auto")]
-        public tiposAuto TipoAuto { get; set; }
+        public TiposAuto TipoAuto { get; set; }
 
         [Required(ErrorMessage = "Fecha y hora es un campo requerido"), Display(Name = "Fecha y Hora")]
         public DateTime FechaHora { get; set; }
@@ -23,7 +23,7 @@ namespace Proyecto.Models
         public Usuario? usuario { get; set; }
     }
 
-    public enum tiposAuto
+    public enum TiposAuto
     {
         SUV,
         Compacto,
