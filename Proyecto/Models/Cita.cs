@@ -10,8 +10,11 @@ namespace Proyecto.Models
         [Required(ErrorMessage = "Tipo de auto es un campo requerido"), Display(Name = "Tipo de Auto")]
         public TiposAuto TipoAuto { get; set; }
 
-        [Required(ErrorMessage = "Fecha y hora es un campo requerido"), Display(Name = "Fecha y Hora")]
-        public DateTime FechaHora { get; set; }
+        [Required(ErrorMessage = "Fecha es un campo requerido"), Display(Name = "Fecha")]
+        public DateOnly Fecha { get; set; }
+
+        [Required(ErrorMessage = "Hora es un campo requerido"), Display(Name = "Hora")]
+        public TimeOnly Hora { get; set; }
 
         [Display(Name = "Precio")]
         public float Precio { get; set; }

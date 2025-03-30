@@ -16,16 +16,22 @@ public class CitaController : Controller
         return View();
     }
 
+    [HttpPost]
+    public IActionResult Create(string TipoAuto, string Fecha, string Hora)
+    {
+        return View();
+    }
+
     [HttpGet]
     public JsonResult AvailableTimes(string date)
     {
-        if (DateTime.TryParse(date, out DateTime parsedDate))
+        if (DateOnly.TryParse(date, out DateOnly parsedDate))
         {
             List<string> AvailableTimes = ["7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"];
-            List<Cita> existing_citas = _context.Citas.Where(c => c.FechaHora.Date == parsedDate.Date).ToList();
+            List<Cita> CitasExistentes = _context.Citas.Where(c => c.Fecha == parsedDate).ToList();
 
-            foreach (Cita cita in existing_citas)
-                AvailableTimes.Remove(cita.FechaHora.ToString("h:mm tt"));
+            foreach (Cita cita in CitasExistentes)
+                AvailableTimes.Remove(cita.Hora.ToString("h:mm tt"));
 
             return Json(new { times = AvailableTimes });
         }

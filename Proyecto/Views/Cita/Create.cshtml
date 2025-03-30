@@ -19,13 +19,18 @@
         <span asp-validation-for="TipoAuto" class="text-danger"></span>
     </div>
     <div class="form-group d-flex flex-column" style="gap: 5px">
-        <label asp-for="FechaHora"></label>
-        <input type="date" id="Fecha" class="form-control" onchange="getAvailableTimes();">
-        <div>
-            <select class="form-control" id="Hora" style="display: none;"></select>
-            <span id="HoraError" class="text-danger">No hay horas disponibles para este día</span>
-        </div>
-        <span asp-validation-for="FechaHora" class="text-danger"></span>
+        <label asp-for="Fecha"></label>
+        <input type="date" asp-for="Fecha" id="Fecha" class="form-control" onchange="getAvailableTimes();">
+        <span asp-validation-for="Fecha" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Hora"></label>
+        <select class="form-control" asp-for="Hora" id="Hora" style="display: none;"></select>
+        <span id="HoraError" class="text-danger">No hay horas disponibles para este día</span>
+        <span asp-validation-for="Hora" class="text-danger"></span>
+    </div>
+    <div>
+        <input type="submit" class="btn btn-success" value="Guardar" />
     </div>
 }
 

@@ -35,7 +35,8 @@ namespace Proyecto.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TipoAuto = table.Column<int>(type: "int", nullable: false),
-                    FechaHora = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Fecha = table.Column<DateOnly>(type: "date", nullable: false),
+                    Hora = table.Column<TimeOnly>(type: "time", nullable: false),
                     Precio = table.Column<float>(type: "real", nullable: false),
                     Realizada = table.Column<bool>(type: "bit", nullable: false),
                     usuarioId = table.Column<int>(type: "int", nullable: false)
