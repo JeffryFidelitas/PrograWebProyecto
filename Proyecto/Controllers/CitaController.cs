@@ -17,7 +17,7 @@ public class CitaController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(string TipoAuto, string Fecha, string Hora)
+    public IActionResult Create([Bind("TipoAuto", "Fecha", "Hora")] Cita cita)
     {
         return View();
     }

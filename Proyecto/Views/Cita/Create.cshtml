@@ -23,19 +23,20 @@
         <input type="date" asp-for="Fecha" id="Fecha" class="form-control" onchange="getAvailableTimes();">
         <span asp-validation-for="Fecha" class="text-danger"></span>
     </div>
-    <div>
+    <div class="form-group d-flex flex-column">
         <label asp-for="Hora"></label>
         <select class="form-control" asp-for="Hora" id="Hora" style="display: none;"></select>
         <span id="HoraError" class="text-danger">No hay horas disponibles para este día</span>
         <span asp-validation-for="Hora" class="text-danger"></span>
     </div>
-    <div>
+    <div class="form-group mt-3">
         <input type="submit" class="btn btn-success" value="Guardar" />
     </div>
 }
 
 <script>
     function getAvailableTimes() {
+        $("#HoraError").hide();
         $.ajax({
             url: "/Cita/AvailableTimes",
             type: "GET",
@@ -47,16 +48,15 @@
                     $("#Hora").hide();
                     $("#HoraError").show();
                 }
-                else {
+                else
                     $("#Hora").show();
-                    $("#HoraError").hide();
-                }
                 response['times'].forEach(time => {
                     $("#Hora").append(new Option(time, time));
                 });
             },
             error: function (xhr, status, error) {
                 console.error(error);
+                $("#HoraError").show();
             }
         });
     }
