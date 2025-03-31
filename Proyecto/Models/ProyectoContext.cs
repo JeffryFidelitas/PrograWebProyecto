@@ -9,6 +9,7 @@ namespace Proyecto.Models
 
         public DbSet<Cita> Citas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Lavado> Lavado { get; set; }   
 
     }
 }
