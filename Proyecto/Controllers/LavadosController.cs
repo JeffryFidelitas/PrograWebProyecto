@@ -19,12 +19,14 @@ namespace Proyecto.Controllers
         }
 
         // GET: Lavados
+        //Solo Administrador
         public async Task<IActionResult> Index()
         {
             return View(await _context.Lavado.ToListAsync());
         }
 
         // GET: Lavados/Details/5
+        //Solo Administrador
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,14 +45,14 @@ namespace Proyecto.Controllers
         }
 
         // GET: Lavados/Create
+        //Solo Administrador
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Lavados/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //Solo Administrador
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Precio,Duracion,Estado")] Lavado lavado)
@@ -65,6 +67,7 @@ namespace Proyecto.Controllers
         }
 
         // GET: Lavados/Edit/5
+        //Solo Administrador
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,8 +84,7 @@ namespace Proyecto.Controllers
         }
 
         // POST: Lavados/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //Solo Administrador
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,Duracion,Estado")] Lavado lavado)
@@ -116,6 +118,7 @@ namespace Proyecto.Controllers
         }
 
         // GET: Lavados/Delete/5
+        //Solo administrador
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -134,6 +137,7 @@ namespace Proyecto.Controllers
         }
 
         // POST: Lavados/Delete/5
+        //Solo Administrador
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

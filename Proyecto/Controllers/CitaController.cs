@@ -15,10 +15,11 @@ public class CitaController : Controller
         _context = context;
     }
 
+    //Cliente o Administrador
     [HttpGet]
     public IActionResult Index()
     {
-        Usuario? usuario = _context.Usuarios.Find(1); //TODO Cambiar por usuario logeado
+        Usuario? usuario = _context.Usuarios.Find(1); //Cambiar por usuario logeado
         ViewData["UsuarioLogeado"] = usuario;
         IEnumerable<Cita> citas = _context.Citas
             .Include(c => c.TipoLavado)
@@ -27,6 +28,7 @@ public class CitaController : Controller
         return View(citas);
     }
 
+    //Solo Cliente
     [HttpGet]
     public IActionResult Create()
     {
@@ -34,16 +36,18 @@ public class CitaController : Controller
         return View();
     }
 
+    //Solo Cliente
     [HttpPost]
     public IActionResult Create([Bind("TipoAuto", "Fecha", "Hora")] Cita cita, int TipoLavado)
     {
         cita.TipoLavado = _context.Lavado.Find(TipoLavado);
-        cita.usuario = _context.Usuarios.Find(1); //TODO: Cambiar por usuario logeado
+        cita.usuario = _context.Usuarios.Find(1); //Cambiar por usuario logeado
         _context.Citas.Add(cita);
         _context.SaveChanges();
         return View();
     }
 
+    //Solo Administrador
     [HttpPost]
     public IActionResult ToggleRealizada(int Id, int Realizada)
     {
@@ -58,6 +62,7 @@ public class CitaController : Controller
         return RedirectToAction("Index");
     }
 
+    //Solo Cliente
     [HttpGet]
     public JsonResult AvailableTimes(string date)
     {
