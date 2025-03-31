@@ -1,0 +1,94 @@
+@model IEnumerable<Proyecto.Models.Cita>;
+
+@{
+    ViewData["Title"] = "Citas";
+    Usuario? UsuarioLogeado = ViewData["UsuarioLogeado"] as Usuario;
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<a asp-action="Create">Crear Cita</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoAuto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoLavado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoLavado.Precio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hora)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Realizada)
+            </th>
+            @if (UsuarioLogeado != null && UsuarioLogeado.Rol.Equals(Roles.Administrador))
+            {
+                <th>Usuario</th>
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoAuto)
+                </td>
+                @if (item.TipoLavado != null)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TipoLavado.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TipoLavado.Precio)
+                    </td>
+                }
+                else
+                {
+                    <td>(No hay dato)</td>
+                    <td>(No hay dato)</td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fecha)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hora)
+                </td>
+                <td>
+                    @(item.Realizada ? "Realizado" : "Pendiente")
+                </td>
+                @if (UsuarioLogeado != null && UsuarioLogeado.Rol.Equals(Roles.Administrador))
+                {
+                    @if (item.usuario != null)
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.usuario.Email)
+                        </td>
+                    }
+                    else
+                    {
+                        <td>(No hay dato)</td>
+                    }
+                    <td>
+                        @using (Html.BeginForm("ToggleRealizada", "Cita", FormMethod.Post))
+                        {
+                            <input type="hidden" name="Id" id="Id" value="@item.Id"/>
+                            <input type="hidden" name="Realizada" id="Realizada" value="@(!item.Realizada ? 1 : 0)"/>
+                            <input type="submit" class="btn btn-sm @(!item.Realizada ? "btn-success" : "btn-danger")" value="Marcar Como @(!item.Realizada ? "Realizado" : "Pendiente")" />
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

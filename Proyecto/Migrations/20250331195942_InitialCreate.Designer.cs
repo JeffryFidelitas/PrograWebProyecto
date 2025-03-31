@@ -12,8 +12,8 @@ using Proyecto.Models;
 namespace Proyecto.Migrations
 {
     [DbContext(typeof(ProyectoContext))]
-    [Migration("20250331140825_InicializacionDB")]
-    partial class InicializacionDB
+    [Migration("20250331195942_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,16 +39,13 @@ namespace Proyecto.Migrations
                     b.Property<TimeOnly>("Hora")
                         .HasColumnType("time");
 
-                    b.Property<int?>("LavadoId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Precio")
-                        .HasColumnType("real");
-
                     b.Property<bool>("Realizada")
                         .HasColumnType("bit");
 
                     b.Property<int>("TipoAuto")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TipoLavadoId")
                         .HasColumnType("int");
 
                     b.Property<int>("usuarioId")
@@ -56,7 +53,7 @@ namespace Proyecto.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LavadoId");
+                    b.HasIndex("TipoLavadoId");
 
                     b.HasIndex("usuarioId");
 
@@ -71,8 +68,9 @@ namespace Proyecto.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Descripcion")
-                        .HasColumnType("int");
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Duracion")
                         .HasColumnType("int");
@@ -80,11 +78,12 @@ namespace Proyecto.Migrations
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Nombre")
-                        .HasColumnType("int");
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Precio")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Precio")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -125,27 +124,19 @@ namespace Proyecto.Migrations
 
             modelBuilder.Entity("Proyecto.Models.Cita", b =>
                 {
-                    b.HasOne("Proyecto.Models.Lavado", null)
-                        .WithMany("Cita")
-                        .HasForeignKey("LavadoId");
+                    b.HasOne("Proyecto.Models.Lavado", "TipoLavado")
+                        .WithMany()
+                        .HasForeignKey("TipoLavadoId");
 
                     b.HasOne("Proyecto.Models.Usuario", "usuario")
-                        .WithMany("citas")
+                        .WithMany()
                         .HasForeignKey("usuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("TipoLavado");
+
                     b.Navigation("usuario");
-                });
-
-            modelBuilder.Entity("Proyecto.Models.Lavado", b =>
-                {
-                    b.Navigation("Cita");
-                });
-
-            modelBuilder.Entity("Proyecto.Models.Usuario", b =>
-                {
-                    b.Navigation("citas");
                 });
 #pragma warning restore 612, 618
         }

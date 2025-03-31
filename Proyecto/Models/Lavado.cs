@@ -20,7 +20,5 @@ namespace Proyecto.Models
         [Required(ErrorMessage = "La duración es requerida")]
         public int Duracion { get; set; }
         public bool Estado { get; set; } = true;
-
-        public IEnumerable<Cita>? Cita { get; set; }
     }
 }

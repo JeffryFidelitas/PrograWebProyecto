@@ -1,5 +1,8 @@
+using System.Collections.Immutable;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Proyecto.Models;
 
 namespace Proyecto.Controllers;
@@ -11,15 +14,48 @@ public class CitaController : Controller
     {
         _context = context;
     }
+
+    [HttpGet]
+    public IActionResult Index()
+    {
+        Usuario? usuario = _context.Usuarios.Find(1); //TODO Cambiar por usuario logeado
+        ViewData["UsuarioLogeado"] = usuario;
+        IEnumerable<Cita> citas = _context.Citas
+            .Include(c => c.TipoLavado)
+            .Where(c => c.usuario.Id == usuario.Id || usuario.Rol == Roles.Administrador)
+            .ToImmutableArray();
+        return View(citas);
+    }
+
+    [HttpGet]
     public IActionResult Create()
     {
+        ViewData["TiposLavado"] = _context.Lavado.Where(t => t.Estado).ToImmutableArray();
         return View();
     }
 
     [HttpPost]
-    public IActionResult Create([Bind("TipoAuto", "Fecha", "Hora")] Cita cita)
+    public IActionResult Create([Bind("TipoAuto", "Fecha", "Hora")] Cita cita, int TipoLavado)
     {
-        return View(cita);
+        cita.TipoLavado = _context.Lavado.Find(TipoLavado);
+        cita.usuario = _context.Usuarios.Find(1); //TODO: Cambiar por usuario logeado
+        _context.Citas.Add(cita);
+        _context.SaveChanges();
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult ToggleRealizada(int Id, int Realizada)
+    {
+        Cita cita = _context.Citas.Find(Id);
+        if (cita != null)
+        {
+            cita.Realizada = Realizada == 1;
+            _context.Update(cita);
+            _context.SaveChanges();
+        }
+        //Teoricamente aca se manda un correo
+        return RedirectToAction("Index");
     }
 
     [HttpGet]

@@ -22,8 +22,6 @@ namespace Proyecto.Models
 
         [Required(ErrorMessage = "Rol es un campo requerido"), Display(Name = "Rol")]
         public Roles Rol { get; set; }
-
-        public virtual ImmutableArray<Cita> citas { get; set; }
     }
     public enum Roles {
         Administrador,

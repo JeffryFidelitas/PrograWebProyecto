@@ -16,8 +16,8 @@ namespace Proyecto.Models
         [Required(ErrorMessage = "Hora es un campo requerido"), Display(Name = "Hora")]
         public TimeOnly Hora { get; set; }
 
-        [Display(Name = "Precio")]
-        public float Precio { get; set; }
+        [Display(Name = "Tipo de Lavado")]
+        public Lavado? TipoLavado { get; set; }
 
         [Display(Name = "Realizada")]
         public bool Realizada { get; set; } = false;
