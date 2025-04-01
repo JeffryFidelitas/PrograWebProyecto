@@ -1,15 +1,13 @@
 ﻿@model Proyecto.Models.Lavado
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Eliminar Lavado";
 }
 
-<h1>Delete</h1>
+<h2>@ViewData["Title"]</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>¿Estás seguro de que quieres eliminar este lavado?</h3>
 <div>
-    <h4>Lavado</h4>
-    <hr />
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Nombre)
