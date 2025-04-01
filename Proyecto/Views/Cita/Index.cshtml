@@ -33,8 +33,8 @@
             @if (UsuarioLogeado != null && UsuarioLogeado.Rol.Equals(Roles.Administrador))
             {
                 <th>Usuario</th>
-                <th></th>
             }
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -79,15 +79,10 @@
                     {
                         <td>(No hay dato)</td>
                     }
-                    <td>
-                        @using (Html.BeginForm("ToggleRealizada", "Cita", FormMethod.Post))
-                        {
-                            <input type="hidden" name="Id" id="Id" value="@item.Id"/>
-                            <input type="hidden" name="Realizada" id="Realizada" value="@(!item.Realizada ? 1 : 0)"/>
-                            <input type="submit" class="btn btn-sm @(!item.Realizada ? "btn-success" : "btn-danger")" value="Marcar Como @(!item.Realizada ? "Realizado" : "Pendiente")" />
-                        }
-                    </td>
                 }
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-success">Detalles</a>
+                </td>
             </tr>
         }
     </tbody>

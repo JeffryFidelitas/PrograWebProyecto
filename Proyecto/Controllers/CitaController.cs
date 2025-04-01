@@ -57,8 +57,9 @@ public class CitaController : Controller
             cita.Realizada = Realizada == 1;
             _context.Update(cita);
             _context.SaveChanges();
+            //Teoricamente aca se manda un correo
+            return RedirectToAction("Details", "Cita", new {id = cita.Id});
         }
-        //Teoricamente aca se manda un correo
         return RedirectToAction("Index");
     }
 
@@ -82,5 +83,23 @@ public class CitaController : Controller
             return Json(new { times = AvailableTimes });
         }
         return Json(new { times = (List<string>) [] });
+    }
+
+    //Cliente o Administrador
+    [HttpGet]
+    public IActionResult Details(int id)
+    {
+        Usuario? usuario = _context.Usuarios.Find(1); //Cambiar por usuario logeado
+        if (usuario == null)
+            return RedirectToAction("Index");
+        ViewData["UsuarioLogeado"] = usuario;
+        Cita? cita = _context.Citas
+            .Include(c => c.TipoLavado)
+            .Include(c => c.usuario)
+            .Where(c => c.Id == id && c.usuario != null && (usuario.Rol == Roles.Administrador || c.usuario.Id == usuario.Id))
+            .FirstOrDefault();
+        if (cita == null)
+            return RedirectToAction("Index");
+        return View(cita);
     }
 }

@@ -1,0 +1,73 @@
+@model Proyecto.Models.Cita;
+
+@{
+    ViewData["Title"] = "Cita";
+    Usuario? UsuarioLogeado = ViewData["UsuarioLogeado"] as Usuario;
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<b>@Html.DisplayNameFor(model => model.Id)</b>
+
+<p>@Model.Id</p>
+
+<b>@Html.DisplayNameFor(model => model.TipoAuto)</b>
+
+<p>@Model.TipoAuto</p>
+
+<b>@Html.DisplayNameFor(model => model.Fecha)</b>
+
+<p>@Model.Fecha</p>
+
+<b>@Html.DisplayNameFor(model => model.Hora)</b>
+
+<p>@Model.Hora</p>
+
+<hr>
+
+@if (Model.usuario != null)
+{
+    <h3>Usuario</h3>
+
+    <b>@Html.DisplayNameFor(model => model.usuario.Nombre)</b>
+
+    <p>@(Model.usuario.Nombre) @(Model.usuario.Apellidos)</p>
+
+    <b>@Html.DisplayNameFor(model => model.usuario.Email)</b>
+
+    <p>@Model.usuario.Email</p>
+}
+
+<hr>
+
+@if (Model.TipoLavado != null)
+{
+    <h3>Lavado</h3>
+
+    <b>@Html.DisplayNameFor(model => model.TipoLavado.Nombre)</b>
+
+    <p>@Model.TipoLavado.Nombre</p>
+
+    <b>@Html.DisplayNameFor(model => model.TipoLavado.Descripcion)</b>
+
+    <p>@Model.TipoLavado.Descripcion</p>
+
+    <b>@Html.DisplayNameFor(model => model.TipoLavado.Duracion)</b>
+
+    <p>@Model.TipoLavado.Duracion</p>
+
+    <b>@Html.DisplayNameFor(model => model.TipoLavado.Precio)</b>
+
+    <p>@Model.TipoLavado.Precio</p>
+}
+
+@if (UsuarioLogeado != null && UsuarioLogeado.Rol == Roles.Administrador)
+{
+    <hr>
+    @using (Html.BeginForm("ToggleRealizada", "Cita", FormMethod.Post))
+    {
+        <input type="hidden" name="Id" id="Id" value="@Model.Id"/>
+        <input type="hidden" name="Realizada" id="Realizada" value="@(!Model.Realizada ? 1 : 0)"/>
+        <input type="submit" class="btn @(!Model.Realizada ? "btn-success" : "btn-danger")" value="Marcar Como @(!Model.Realizada ? "Realizado" : "Pendiente")" />
+    }
+}
