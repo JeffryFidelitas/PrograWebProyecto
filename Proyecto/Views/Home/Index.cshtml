@@ -1,8 +1,158 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using CoreLibrary.Auth
+@model CoreLibrary.Models.ViewModels.ViewModel_Index
+
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="page-heading">
+	<div class="page-title">
+		<div class="row mb-4">
+			<div class="col-12 col-md-6 order-md-1 order-last">
+				<h3 class="fw-bold">Bienvenido a LavaCop</h3>
+				<p class="text-subtitle text-muted">Administra tus citas, clientes, servicios y más.</p>
+			</div>
+			<div class="col-12 col-md-6 order-md-2 order-first">
+				<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="/">Inicio</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Panel Principal</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
+	</div>
+
+	@if (RoleHelper.EsAdmin(User))
+	{
+		<section class="section">
+			<div class="row">
+				<!-- Citas Pendientes -->
+				<div class="col-12 col-md-6 col-xl-4">
+					<div class="card shadow-lg border-0 rounded-4 mb-4">
+						<div class="card-body px-4 py-4">
+							<div class="d-flex align-items-center">
+								<div class="me-3 rounded-circle d-flex justify-content-center align-items-center" style="width: 60px; height: 60px; background-color: #ef4444;">
+									<i class="bi bi-calendar-x fs-3 text-white"></i>
+								</div>
+								<div>
+									<h6 class="text-muted mb-1">Citas Pendientes</h6>
+									<h5 class="fw-bold mb-0">@string.Format("{0:N0}", Model.CitasPendientes)</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Clientes Totales -->
+				<div class="col-12 col-md-6 col-xl-4">
+					<div class="card shadow-lg border-0 rounded-4 mb-4">
+						<div class="card-body px-4 py-4">
+							<div class="d-flex align-items-center">
+								<div class="me-3 rounded-circle d-flex justify-content-center align-items-center" style="width: 60px; height: 60px; background-color: #3b82f6;">
+									<i class="bi bi-person fs-3 text-white"></i>
+								</div>
+								<div>
+									<h6 class="text-muted mb-1">Clientes Totales</h6>
+									<h5 class="fw-bold mb-0">@string.Format("{0:N0}", Model.TotalClientes)</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Servicios Totales -->
+				<div class="col-12 col-md-6 col-xl-4">
+					<div class="card shadow-lg border-0 rounded-4 mb-4">
+						<div class="card-body px-4 py-4">
+							<div class="d-flex align-items-center">
+								<div class="me-3 rounded-circle d-flex justify-content-center align-items-center" style="width: 60px; height: 60px; background-color: #10b981;">
+									<i class="bi bi-tools fs-3 text-white"></i>
+								</div>
+								<div>
+									<h6 class="text-muted mb-1">Servicios Totales</h6>
+									<h5 class="fw-bold mb-0">@string.Format("{0:N0}", Model.TotalServicios)</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	}
+
+	@if (RoleHelper.EsCliente(User))
+	{
+		<section class="section">
+			<div class="row">
+				<!-- Citas Pendientes -->
+				<div class="col-12 col-md-6 col-xl-4">
+					<div class="card shadow-lg border-0 rounded-4 mb-4">
+						<div class="card-body px-4 py-4">
+							<div class="d-flex align-items-center">
+								<div class="me-3 rounded-circle d-flex justify-content-center align-items-center" style="width: 60px; height: 60px; background-color: #f59e0b;">
+									<i class="bi bi-calendar-event fs-3 text-white"></i>
+								</div>
+								<div>
+									<h6 class="text-muted mb-1">Citas Pendientes</h6>
+									<h5 class="fw-bold mb-0">@string.Format("{0:N0}", Model.MisCitasPendientes)</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Citas Confirmadas -->
+				<div class="col-12 col-md-6 col-xl-4">
+					<div class="card shadow-lg border-0 rounded-4 mb-4">
+						<div class="card-body px-4 py-4">
+							<div class="d-flex align-items-center">
+								<div class="me-3 rounded-circle d-flex justify-content-center align-items-center" style="width: 60px; height: 60px; background-color: #22c55e;">
+									<i class="bi bi-calendar-check fs-3 text-white"></i>
+								</div>
+								<div>
+									<h6 class="text-muted mb-1">Citas Confirmadas</h6>
+									<h5 class="fw-bold mb-0">@string.Format("{0:N0}", Model.MisCitasConfirmadas)</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	}
+
+	<section class="section">
+		<h4 class="mb-4 fw-bold">Nuestros Servicios</h4>
+		<div class="row">
+			@if (Model.Servicios?.Count == 0)
+			{
+				<div class="col-12">
+					<div class="alert alert-info text-center" role="alert">
+						No hay servicios disponibles en este momento.
+					</div>
+				</div>
+			}
+			else
+			{
+				foreach (var servicio in Model.Servicios!)
+				{
+					<div class="col-md-6 col-xl-4">
+						<div class="card shadow-sm border-0 rounded-4 mb-4 h-100">
+							<div class="card-body d-flex flex-column justify-content-between">
+								<div>
+									<h5 class="card-title text-primary fw-bold">@servicio.Nombre</h5>
+									<p class="text-muted">@servicio.Descripcion</p>
+									<p><strong>💲 Precio:</strong> @servicio.Precio.ToString("C")</p>
+									<p><strong>⏱ Duración:</strong> @servicio.Duracion minutos</p>
+								</div>
+								<a href="/Citas" class="btn btn-outline-primary mt-3">Agendar una Cita</a>
+							</div>
+						</div>
+					</div>
+				}
+			}
+		</div>
+	</section>
 </div>

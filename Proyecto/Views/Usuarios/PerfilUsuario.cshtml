@@ -1,0 +1,104 @@
+﻿@using System.Security.Claims
+@model CoreLibrary.Models.ViewModels.ViewModel_UsuarioPerfilCompleto
+
+@{
+    ViewData["Title"] = "Perfil de Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+<section class="mt-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header text-white">
+                <h4 class="card-title mb-0">Mi Perfil</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Menú de pestañas -->
+                    <div class="col-md-3 border-end">
+                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                             aria-orientation="vertical">
+                            <a class="nav-link active" id="v-pills-info-tab" data-bs-toggle="pill"
+                               href="#v-pills-info" role="tab" aria-controls="v-pills-info"
+                               aria-selected="true">Información</a>
+
+                            <!-- Mis vehículos -->
+                            <a class="nav-link" id="v-pills-vehiculos-tab" data-bs-toggle="pill"
+                               href="#v-pills-vehiculos" role="tab" aria-controls="v-pills-vehiculos"
+                               aria-selected="false">Mis Vehículos</a>
+
+                            <a class="nav-link" id="v-pills-config-tab" data-bs-toggle="pill"
+                               href="#v-pills-config" role="tab" aria-controls="v-pills-config"
+                               aria-selected="false">Configuración</a>
+                        </div>
+                    </div>
+
+                    <!-- Contenido de pestañas -->
+                    <div class="col-md-9">
+                        <div class="tab-content" id="v-pills-tabContent">
+                            <!-- Información -->
+                            <div class="tab-pane fade show active" id="v-pills-info" role="tabpanel" aria-labelledby="v-pills-info-tab">
+                                <h5 class="mb-3">Información Personal</h5>
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-3 text-muted">Detalles personales</h6>
+                                        <p><strong>Nombre:</strong> @Model.NombreCompleto</p>
+                                        <p><strong>Email:</strong> @Model.Correo</p>
+                                        <p><strong>Teléfono:</strong> @Model.Telefono</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mis vehículos -->
+                            <div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
+                                <h5 class="mb-3">Mis Vehículos</h5>
+
+                                @if (Model.Vehiculos != null && Model.Vehiculos.Any())
+                                {
+                                    <div class="row">
+                                        @foreach (var vehiculo in Model.Vehiculos)
+                                        {
+                                            <div class="col-md-4 mb-4">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">@vehiculo.Marca @vehiculo.Modelo</h5>
+                                                        <p><strong>Placa:</strong> @vehiculo.Placa</p>
+                                                        <p><strong>Marca:</strong> @vehiculo.Marca</p>
+                                                        <p><strong>Modelo:</strong> @vehiculo.Modelo</p>
+                                                        <p><strong>Color:</strong> @vehiculo.Color</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-info" role="alert">
+                                        No tienes vehículos registrados. ¡Agrega uno para comenzar!
+                                    </div>
+                                }
+                            </div>
+
+
+                            <!-- Configuración -->
+                            <div class="tab-pane fade" id="v-pills-config" role="tabpanel"
+                                 aria-labelledby="v-pills-config-tab">
+                                <h5 class="mb-3">Configuración de Cuenta</h5>
+                                <p>Puedes personalizar tu cuenta o cambiar la contraseña.</p>
+                                <ul>
+                                    <li><a href="#">Actualizar contraseña</a></li>
+                                    <li><a href="#">Editar información personal</a></li>
+                                    <li><a href="#">Cerrar sesión en todos los dispositivos</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- row -->
+            </div> <!-- card-body -->
+        </div> <!-- card -->
+    </div>
+</section>

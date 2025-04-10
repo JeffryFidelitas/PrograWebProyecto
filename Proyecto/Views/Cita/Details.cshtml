@@ -1,11 +1,11 @@
-@model Proyecto.Models.Cita;
+@model CoreLibrary.Models.Cita;
 
 @{
     ViewData["Title"] = "Cita";
-    Usuario? UsuarioLogeado = ViewData["UsuarioLogeado"] as Usuario;
+    // Usuario? UsuarioLogeado = ViewData["UsuarioLogeado"] as Usuario;
 }
 
-<h2>@ViewData["Title"]</h2>
+@* <h2>@ViewData["Title"]</h2>
 
 <b>@Html.DisplayNameFor(model => model.Id)</b>
 
@@ -59,15 +59,15 @@
     <b>@Html.DisplayNameFor(model => model.TipoLavado.Precio)</b>
 
     <p>@Model.TipoLavado.Precio</p>
-}
+} *@
 
-@if (UsuarioLogeado != null && UsuarioLogeado.Rol == Roles.Administrador)
+@* @if (UsuarioLogeado != null && UsuarioLogeado.Rol == Roles.Administrador) *@
 {
     <hr>
-    @using (Html.BeginForm("ToggleRealizada", "Cita", FormMethod.Post))
-    {
-        <input type="hidden" name="Id" id="Id" value="@Model.Id"/>
-        <input type="hidden" name="Realizada" id="Realizada" value="@(!Model.Realizada ? 1 : 0)"/>
-        <input type="submit" class="btn @(!Model.Realizada ? "btn-success" : "btn-danger")" value="Marcar Como @(!Model.Realizada ? "Realizado" : "Pendiente")" />
-    }
+    @* @using (Html.BeginForm("ToggleRealizada", "Cita", FormMethod.Post)) *@
+    @* { *@
+    @*     <input type="hidden" name="Id" id="Id" value="@Model.Id"/> *@
+    @*     <input type="hidden" name="Realizada" id="Realizada" value="@(!Model.Realizada ? 1 : 0)"/> *@
+    @*     <input type="submit" class="btn @(!Model.Realizada ? "btn-success" : "btn-danger")" value="Marcar Como @(!Model.Realizada ? "Realizado" : "Pendiente")" /> *@
+    @* } *@
 }
