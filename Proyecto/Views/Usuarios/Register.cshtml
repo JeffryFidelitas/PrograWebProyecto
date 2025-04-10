@@ -1,0 +1,95 @@
+﻿@model CoreLibrary.Models.ViewModels.ViewModel_UsuarioRegister
+
+@{
+	Layout = "~/Views/Shared/_LayoutAuth.cshtml";
+	ViewData["Title"] = "Registro de Usuario";
+}
+
+<h1 class="auth-title">Registro</h1>
+
+<form asp-action="Register" asp-controller="Usuarios" method="post">
+	<div class="form-group position-relative has-icon-left mb-4">
+		<input asp-for="Nombre" type="text" class="form-control form-control-xl" placeholder="Nombre" />
+		<div class="form-control-icon">
+			<i class="bi bi-person"></i>
+		</div>
+	</div>
+	@if (ViewData.ModelState["Nombre"]?.Errors.Count > 0)
+	{
+		<div class="alert alert-danger d-flex align-items-center">
+			<i class="bi bi-exclamation-circle me-2"></i>
+			@ViewData.ModelState["Nombre"]!.Errors[0].ErrorMessage
+		</div>
+	}
+
+	<div class="form-group position-relative has-icon-left mb-4">
+		<input asp-for="Apellido" type="text" class="form-control form-control-xl" placeholder="Apellido" />
+		<div class="form-control-icon">
+			<i class="bi bi-person"></i>
+		</div>
+	</div>
+	@if (ViewData.ModelState["Apellido"]?.Errors.Count > 0)
+	{
+		<div class="alert alert-danger d-flex align-items-center">
+			<i class="bi bi-exclamation-circle me-2"></i>
+			@ViewData.ModelState["Apellido"]!.Errors[0].ErrorMessage
+		</div>
+	}
+
+	<div class="form-group position-relative has-icon-left mb-4">
+		<input asp-for="Telefono" type="text" class="form-control form-control-xl" placeholder="Teléfono" />
+		<div class="form-control-icon">
+			<i class="bi bi-telephone"></i> <!-- Ícono de teléfono -->
+		</div>
+	</div>
+	@if (ViewData.ModelState["Telefono"]?.Errors.Count > 0)
+	{
+		<div class="alert alert-danger d-flex align-items-center">
+			<i class="bi bi-exclamation-circle me-2"></i>
+			@ViewData.ModelState["Telefono"]!.Errors[0].ErrorMessage
+		</div>
+	}
+
+	<div class="form-group position-relative has-icon-left mb-4">
+		<input asp-for="Correo" type="text" class="form-control form-control-xl" placeholder="Correo" />
+		<div class="form-control-icon">
+			<i class="bi bi-envelope"></i> <!-- Ícono de correo -->
+		</div>
+	</div>
+	@if (ViewData.ModelState["Correo"]?.Errors.Count > 0)
+	{
+		<div class="alert alert-danger d-flex align-items-center">
+			<i class="bi bi-exclamation-circle me-2"></i>
+			@ViewData.ModelState["Correo"]!.Errors[0].ErrorMessage
+		</div>
+	}
+
+	<div class="form-group position-relative has-icon-left mb-4">
+		<input asp-for="Contrasenna" type="password" class="form-control form-control-xl" placeholder="Contraseña" />
+		<div class="form-control-icon">
+			<i class="bi bi-shield-lock"></i> <!-- Ícono de candado -->
+		</div>
+	</div>
+	@if (ViewData.ModelState["Contrasenna"]?.Errors.Count > 0)
+	{
+		<div class="alert alert-danger d-flex align-items-center">
+			<i class="bi bi-exclamation-circle me-2"></i>
+			@ViewData.ModelState["Contrasenna"]!.Errors[0].ErrorMessage
+		</div>
+	}
+
+	<div class="form-check form-check-lg d-flex align-items-end">
+		<input class="form-check-input me-2" type="checkbox" value="" id="flexCheckDefault" />
+		<label class="form-check-label text-gray-600" for="flexCheckDefault">
+			Keep me logged in
+		</label>
+	</div>
+
+	<button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Regístrarse</button>
+</form>
+
+<div class="text-center mt-5 text-lg fs-4">
+	<p class='text-gray-600'>
+		¿Ya tienes una cuenta? <a asp-action="Login" asp-controller="Usuarios" class="font-bold">Iniciar Sesión</a>.
+	</p>
+</div>
