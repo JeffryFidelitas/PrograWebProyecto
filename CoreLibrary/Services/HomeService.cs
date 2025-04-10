@@ -40,20 +40,10 @@ namespace CoreLibrary.Services
                 case Roles.Administrador:
                 case Roles.Empleado:
                     // Información para Admins y Empleados
-                    var tareasAdmin = new[]
-                    {
-                        _context.Citas.CountAsync(c => c.Estado == EstadoCita.Pendiente),
-                        _context.Usuarios.CountAsync(u => u.Rol == Roles.Cliente),
-                        _context.Servicios.CountAsync(),
-                        _context.Reportes.CountAsync()
-                    };
-
-                    await Task.WhenAll(tareasAdmin);
-
-                    modelo.CitasPendientes = tareasAdmin[0].Result;
-                    modelo.TotalClientes = tareasAdmin[1].Result;
-                    modelo.TotalServicios = tareasAdmin[2].Result;
-                    modelo.TotalReportes = tareasAdmin[3].Result;
+                    modelo.CitasPendientes = await _context.Citas.CountAsync(c => c.Estado == EstadoCita.Pendiente);
+                    modelo.TotalClientes = await _context.Usuarios.CountAsync(u => u.Rol == Roles.Cliente);
+                    modelo.TotalServicios = await _context.Servicios.CountAsync();
+                    modelo.TotalReportes = await _context.Reportes.CountAsync();
                     break;
 
                 case Roles.Cliente:
@@ -64,16 +54,8 @@ namespace CoreLibrary.Services
 
                     if (cliente != null)
                     {
-                        var tareasCliente = new[]
-                        {
-                            _context.Citas.CountAsync(c => c.ClienteId == cliente.Id && c.Estado == EstadoCita.Pendiente),
-                            _context.Citas.CountAsync(c => c.ClienteId == cliente.Id && c.Estado == EstadoCita.Confirmada)
-                        };
-
-                        await Task.WhenAll(tareasCliente);
-
-                        modelo.MisCitasPendientes = tareasCliente[0].Result;
-                        modelo.MisCitasConfirmadas = tareasCliente[1].Result;
+                        modelo.MisCitasPendientes = await _context.Citas.CountAsync(c => c.ClienteId == cliente.Id && c.Estado == EstadoCita.Pendiente);
+                        modelo.MisCitasConfirmadas = await _context.Citas.CountAsync(c => c.ClienteId == cliente.Id && c.Estado == EstadoCita.Confirmada);
                     }
                     break;
             }
