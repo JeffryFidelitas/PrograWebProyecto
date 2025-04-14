@@ -19,9 +19,11 @@ namespace CoreLibrary.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Precio = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false)
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Precio = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
+                    Duracion = table.Column<int>(type: "int", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,7 +56,7 @@ namespace CoreLibrary.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
                     NombreCompleto = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Correo = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -195,18 +197,59 @@ namespace CoreLibrary.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Servicios",
+                columns: new[] { "Id", "Activo", "Descripcion", "Duracion", "Nombre", "Precio" },
+                values: new object[,]
+                {
+                    { -2, true, "Inspección y ajuste de frenos.", 90, "Revisión de Frenos", 49.99m },
+                    { -1, true, "Cambio de aceite y filtro.", 60, "Cambio de Aceite", 29.99m }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "Id", "Apellido", "Contrasenna", "Correo", "FechaRegistro", "Nombre", "Rol" },
                 values: new object[,]
                 {
-                    { -2, "Samuel", "123", "jeffrey@gmail.com", new DateTime(2025, 4, 7, 12, 0, 0, 0, DateTimeKind.Unspecified), "Jeffrey", 1 },
+                    { -2, "Samuel", "123", "jeffrey@gmail.com", new DateTime(2025, 4, 7, 12, 0, 0, 0, DateTimeKind.Unspecified), "Jeffrey", 2 },
                     { -1, "Montero", "12", "randall@gmail.com", new DateTime(2025, 4, 7, 12, 0, 0, 0, DateTimeKind.Unspecified), "Randall", 0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Clientes",
+                columns: new[] { "Id", "Correo", "NombreCompleto", "Telefono", "UsuarioId" },
+                values: new object[,]
+                {
+                    { -2, "randall@gmail.com", "Randall Montero", "12345678", -1 },
+                    { -1, "jeffrey@gmail.com", "Jeffrey Samuel", "12345678", -2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Vehiculos",
+                columns: new[] { "Id", "ClienteId", "Color", "Marca", "Modelo", "Placa", "Tipo" },
+                values: new object[,]
+                {
+                    { -2, -1, "Azul", "Honda", "Civic", "XYZ789", "SUV" },
+                    { -1, -1, "Rojo", "Toyota", "Corolla", "ABC123", "Sedán" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Citas",
+                columns: new[] { "Id", "ClienteId", "Estado", "FechaHora", "VehiculoId" },
+                values: new object[,]
+                {
+                    { -2, -1, 1, new DateTime(2025, 4, 12, 12, 0, 0, 0, DateTimeKind.Unspecified), -2 },
+                    { -1, -1, 0, new DateTime(2025, 4, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), -1 }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Citas_ClienteId",
                 table: "Citas",
                 column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Citas_FechaHora",
+                table: "Citas",
+                column: "FechaHora");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Citas_VehiculoId",
@@ -240,9 +283,21 @@ namespace CoreLibrary.Migrations
                 column: "GeneradoPor");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_Correo",
+                table: "Usuarios",
+                column: "Correo",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Vehiculos_ClienteId",
                 table: "Vehiculos",
                 column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vehiculos_Placa",
+                table: "Vehiculos",
+                column: "Placa",
+                unique: true);
         }
 
         /// <inheritdoc />

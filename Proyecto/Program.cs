@@ -12,6 +12,9 @@ builder.Services.AddControllersWithViews();
 // Agregamos las interfaces
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
+builder.Services.AddScoped<ICitaService, CitaService>();
+builder.Services.AddScoped<IServicioService, ServicioService>();
+builder.Services.AddScoped<IVehiculoService, VehiculoService>();
 
 // Agregamos los servicios de autenticacion
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -21,16 +24,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Accesos/Error403";
     });
 
-// Configuración de DBContext
+// Configuraciï¿½n de DBContext
 builder.Services.AddDbContext<ProyectDBContext>(op =>
 {
-    op.UseSqlServer(builder.Configuration.GetConnectionString("Proyecto_"));
+    op.UseSqlServer(builder.Configuration.GetConnectionString("Proyecto"));
 });
 
 var app = builder.Build();
 
 
-// Usamos el middleware para manejar errores y redirigir a la acción correspondiente
+// Usamos el middleware para manejar errores y redirigir a la acciï¿½n correspondiente
 app.UseStatusCodePagesWithReExecute("/Accesos/Error", "?statusCode={0}");
 app.UseHsts();
 
@@ -40,7 +43,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();  // Asegúrate de usar la autenticación
+app.UseAuthentication();  // Asegï¿½rate de usar la autenticaciï¿½n
 app.UseAuthorization();
 
 app.MapControllerRoute(

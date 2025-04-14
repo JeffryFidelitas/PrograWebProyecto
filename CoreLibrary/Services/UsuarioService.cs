@@ -55,6 +55,12 @@ namespace CoreLibrary.Services
                          .FirstOrDefaultAsync(u => u.Id == id);
         }
 
+        public async Task<Cliente?> ObtenerClientePorIdAsync(int id)
+        {
+            return await _context.Clientes
+                        .FirstOrDefaultAsync(c => c.UsuarioId == id);
+        }
+
         public async Task<ViewModel_UsuarioPerfilCompleto> ObtenerPerfilPorIdAsync(int id)
         {
             var cliente = await _context.Clientes

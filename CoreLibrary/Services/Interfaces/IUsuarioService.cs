@@ -21,6 +21,8 @@ namespace CoreLibrary.Services.Interfaces
 
         Task<ViewModel_UsuarioPerfilCompleto> ObtenerPerfilPorIdAsync(int id);
 
+        Task<Cliente> ObtenerClientePorIdAsync(int id);
+
         Task CrearAsync(ViewModel_UsuarioRegister usuario);
 
         Task ActualizarAsync(Usuario usuario);
