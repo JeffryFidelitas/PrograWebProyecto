@@ -22,6 +22,36 @@ public class ServicioController : Controller
     }
 
     [HttpGet]
+public async Task<IActionResult> Index()
+{
+    try
+    {
+        var usuarioIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(usuarioIdClaim) || !int.TryParse(usuarioIdClaim, out var usuarioId))
+        {
+            return RedirectToAction("Login", "Usuarios");
+        }
+        
+        var usuario = await _usuarioService.ObtenerPorIdAsync(usuarioId);
+        if (usuario == null)
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Usuarios");
+        }
+        
+        // Obtener todos los servicios
+        var servicios = await _servicioService.ObtenerTodosAsync();
+        
+        return View(servicios);
+    }
+    catch (Exception)
+    {
+        return RedirectToAction("Error", "Home");
+    }
+}
+
+
+    [HttpGet]
     public async Task<IActionResult> Create()
     {
         try
@@ -69,7 +99,7 @@ public class ServicioController : Controller
                 return RedirectToAction("Login", "Usuarios");
             }
             await _servicioService.CrearAsync(servicio);
-            return View(servicio);
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception)
         {

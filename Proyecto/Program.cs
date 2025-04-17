@@ -25,10 +25,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 // Configuraci�n de DBContext
-builder.Services.AddDbContext<ProyectDBContext>(op =>
-{
-    op.UseSqlServer(builder.Configuration.GetConnectionString("Proyecto"));
-});
+builder.Services.AddDbContext<ProyectDBContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("Proyecto_")));
 
 var app = builder.Build();
 

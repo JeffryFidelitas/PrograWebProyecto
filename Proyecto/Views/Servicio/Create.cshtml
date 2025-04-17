@@ -1,76 +1,117 @@
-@using CoreLibrary.Models;
-@using System.Collections.Immutable;
-@model CoreLibrary.Models.Servicio
-
+﻿@model CoreLibrary.Models.Servicio
 @{
-	ViewData["Title"] = "Agregar Servicio";
+    ViewData["Title"] = "Crear Servicio";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-4 text-primary"><i class="bi bi-plus-circle me-2"></i>Crear Servicio</h1>
+            <p class="lead text-muted">Añade un nuevo servicio a tu catálogo de negocio</p>
+        </div>
+        <div class="col-md-4 text-end d-flex align-items-center justify-content-end">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Volver al listado
+            </a>
+        </div>
+    </div>
 
-@using (Html.BeginForm("Create", "Servicio", FormMethod.Post, new { @class = "form" }))
-{
-	<div class="form-group d-flex flex-column" style="gap: 5px">
-		<label asp-for="Nombre"></label>
-		<input type="text" asp-for="Nombre" class="form-control">
-		<span asp-validation-for="Nombre" class="text-danger"></span>
-	</div>
-	<div class="form-group d-flex flex-column" style="gap: 5px">
-		<label asp-for="Descripcion"></label>
-		<input type="text" asp-for="Descripcion" class="form-control">
-		<span asp-validation-for="Descripcion" class="text-danger"></span>
-	</div>
-	<div class="form-group d-flex flex-column" style="gap: 5px">
-		<label asp-for="Precio"></label>
-		<input type="number" asp-for="Precio" class="form-control">
-		<span asp-validation-for="Precio" class="text-danger"></span>
-	</div>
-	<div class="form-group d-flex flex-column" style="gap: 5px">
-		<label asp-for="Duracion"></label>
-		<input type="text" asp-for="Duracion" class="form-control">
-		<span asp-validation-for="Duracion" class="text-danger"></span>
-	</div>
-	<div class="form-group mt-2">
-		<input type="submit" class="btn btn-success" id="Guardar" value="Guardar" />
-	</div>
-}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>Por favor, corrige los errores indicados
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Nombre" class="form-control" placeholder="Nombre del servicio" />
+                                    <label asp-for="Nombre" class="form-label">
+                                        <i class="bi bi-tag me-1"></i>Nombre
+                                    </label>
+                                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Precio" class="form-control" placeholder="0.00" type="number" step="0.01" min="0" />
+                                    <label asp-for="Precio" class="form-label">
+                                        <i class="bi bi-currency-dollar me-1"></i>Precio
+                                    </label>
+                                    <span asp-validation-for="Precio" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="Descripcion" class="form-control" placeholder="Descripción del servicio" style="height: 100px"></textarea>
+                            <label asp-for="Descripcion" class="form-label">
+                                <i class="bi bi-card-text me-1"></i>Descripción
+                            </label>
+                            <span asp-validation-for="Descripcion" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Duracion" class="form-control" placeholder="0" type="number" min="1" />
+                                    <label asp-for="Duracion" class="form-label">
+                                        <i class="bi bi-clock me-1"></i>Duración (minutos)
+                                    </label>
+                                    <span asp-validation-for="Duracion" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-x-circle me-1"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i>Guardar Servicio
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-info-circle me-2"></i>Información</h5>
+                    <p class="card-text">Los servicios que crees estarán disponibles para ser asignados a citas de clientes.</p>
+                    <hr>
+                    <h6><i class="bi bi-lightbulb me-2"></i>Consejos</h6>
+                    <ul class="small">
+                        <li>Usa nombres claros y descriptivos</li>
+                        <li>Incluye detalles importantes en la descripción</li>
+                        <li>Establece una duración realista para el servicio</li>
+                        <li>Verifica el precio antes de guardar</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
-	<script>
-		function getAvailableTimes(selectedTime) {
-			$("#HoraError").hide();
-			$("#Guardar").prop("disabled",true);
-			$.ajax({
-				url: "/Cita/AvailableTimes",
-				type: "GET",
-				dataType: "json",
-				data: { date: $("#Fecha").val() },
-				success: function (response) {
-					$("#Hora").empty();
-					if (response['times'].length == 0) {
-						$("#Hora").hide();
-						$("#HoraError").show();
-					}
-					else {
-						$("#Hora").show();
-						$("#Guardar").prop("disabled",false);
-					}
-					response['times'].forEach(time => {
-						$("#Hora").append(new Option(time, time));
-					});
-					if (selectedTime != null){
-						$("#Hora").val(selectedTime);
-					}
-				},
-				error: function (xhr, status, error) {
-					console.error(error);
-					$("#HoraError").show();
-					$("#Guardar").prop("disabled",true);
-				}
-			});
-		}
-		$(document).ready(function () {
-			getAvailableTimes(null);
-		});
-	</script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function() {
+            // Enfoque automático en el primer campo
+            $("#Nombre").focus();
+
+            // Formateo de precio para mostrar dos decimales
+            $("#Precio").on("blur", function() {
+                if ($(this).val()) {
+                    $(this).val(parseFloat($(this).val()).toFixed(2));
+                }
+            });
+        });
+    </script>
 }
