@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreLibrary.Migrations
 {
     [DbContext(typeof(ProyectDBContext))]
-    [Migration("20250410044502_NuevasPropiedadesUsuariosYClientesYNuevaNavegacionEnContext")]
-    partial class NuevasPropiedadesUsuariosYClientesYNuevaNavegacionEnContext
+    [Migration("20250414045824_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

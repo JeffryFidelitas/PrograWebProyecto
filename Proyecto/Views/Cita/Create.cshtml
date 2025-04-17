@@ -1,43 +1,67 @@
+@using CoreLibrary.Models;
 @using System.Collections.Immutable;
 @model CoreLibrary.Models.Cita
 
 @{
 	ViewData["Title"] = "Agendar Cita";
-	// var lavados = ViewData["TiposLavado"] as ImmutableArray<Lavado>?;
+	var servicios = ViewData["Servicios"] as List<Servicio>;
 }
 
-@* <h2>@ViewData["Title"]</h2>
+<h2>@ViewData["Title"]</h2>
 
 @using (Html.BeginForm("Create", "Cita", FormMethod.Post, new { @class = "form" }))
 {
 	<div class="form-group d-flex flex-column" style="gap: 5px">
-		<label asp-for="TipoAuto"></label>
-		<select asp-for="TipoAuto" class="form-control">
-			@foreach (var ta in Enum.GetValues(typeof(Proyecto.Models.TiposAuto)))
-			{
-				<option value="@ta">@ta</option>
-			}
+		<label asp-for="Vehiculo.Tipo"></label>
+		<select asp-for="Vehiculo.Tipo" name="VehiculoTipo" class="form-control">
+			<option value="Sedan">Sedan</option>
+			<option value="SUV">SUV</option>
+			<option value="Convertible">Convertible</option>
+			<option value="Hatchback">Hatchback</option>
 		</select>
-		<span asp-validation-for="TipoAuto" class="text-danger"></span>
+		<span asp-validation-for="Vehiculo.Tipo" class="text-danger"></span>
 	</div>
 	<div class="form-group d-flex flex-column" style="gap: 5px">
-		<label asp-for="Fecha"></label>
-		<input type="date" asp-for="Fecha" min="@DateTime.Now.ToString("yyyy-MM-dd")" id="Fecha" class="form-control" onchange="getAvailableTimes(null);">
-		<span asp-validation-for="Fecha" class="text-danger"></span>
+		<label asp-for="Vehiculo.Placa"></label>
+		<input asp-for="Vehiculo.Placa" type="text" name="VehiculoPlaca" class="form-control">
+		<span asp-validation-for="Vehiculo.Placa" class="text-danger"></span>
 	</div>
 	<div class="form-group d-flex flex-column" style="gap: 5px">
-		<label asp-for="Hora"></label>
-		<select class="form-control" asp-for="Hora" id="Hora" style="display: none;"></select>
+		<label asp-for="Vehiculo.Marca"></label>
+		<select asp-for="Vehiculo.Marca" name="VehiculoMarca" class="form-control">
+			<option value="Toyota">Toyota</option>
+			<option value="Nissan">Nissan</option>
+			<option value="Hyundai">Hyundai</option>
+			<option value="BYD">BYD</option>
+		</select>
+		<span asp-validation-for="Vehiculo.Marca" class="text-danger"></span>
+	</div>
+	<div class="form-group d-flex flex-column" style="gap: 5px">
+		<label asp-for="Vehiculo.Modelo"></label>
+		<input type="text" asp-for="Vehiculo.Modelo" name="VehiculoModelo" class="form-control">
+		<span asp-validation-for="Vehiculo.Modelo" class="text-danger"></span>
+	</div>
+	<div class="form-group d-flex flex-column" style="gap: 5px">
+		<label asp-for="Vehiculo.Color"></label>
+		<input type="text" asp-for="Vehiculo.Color" name="VehiculoColor" class="form-control">
+		<span asp-validation-for="Vehiculo.Color" class="text-danger"></span>
+	</div>
+	<div class="form-group d-flex flex-column" style="gap: 5px">
+		<label>Fecha</label>
+		<input type="date" name="Fecha" min="@DateTime.Now.ToString("yyyy-MM-dd")" id="Fecha" class="form-control" onchange="getAvailableTimes(null);">
+		<span asp-validation-for="FechaHora" class="text-danger"></span>
+	</div>
+	<div class="form-group d-flex flex-column" style="gap: 5px">
+		<label>Hora</label>
+		<select class="form-control" name="Hora" id="Hora" style="display: none;"></select>
 		<span id="HoraError" class="text-danger">No hay horas disponibles para este día</span>
-		<span asp-validation-for="Hora" class="text-danger"></span>
 	</div>
 	<div class="form-group d-flex flex-column" style="gap: 5px">
-		<label asp-for="TipoLavado"></label>
-
-		@if (lavados.HasValue && lavados.Value.Length > 0)
+		<label asp-for="CitasServicios.First().Servicio.Nombre"></label>
+		@if (servicios != null && servicios.Count > 0)
         {
-            <select class="form-control" asp-for="TipoLavado">
-                @foreach (var tipo in lavados.Value)
+            <select class="form-control" asp-for="CitasServicios.First().Servicio.Id" name="ServicioId">
+                @foreach (var tipo in servicios)
                 {
                     <option value="@tipo.Id"><span>@tipo.Nombre</span> (<span>@tipo.Precio</span>)</option>
                 }
@@ -45,12 +69,12 @@
         }
         else
         {
-            <span class="text-danger">No hay tipos de lavado disponibles</span>
+            <br><span class="text-danger">No hay servicios disponibles</span>
         }
-		<span asp-validation-for="TipoLavado" class="text-danger"></span>
+		<span asp-validation-for="CitasServicios.First().Servicio.Nombre" class="text-danger"></span>
 	</div>
 	<div class="form-group mt-2">
-		<input type="submit" class="btn btn-success" id="Guardar" disabled value="Guardar" />
+		<input type="submit" class="btn btn-success" id="Guardar" value="Guardar" />
 	</div>
 }
 
@@ -92,4 +116,4 @@
 			getAvailableTimes(null);
 		});
 	</script>
-} *@
+}

@@ -1,73 +1,91 @@
+@using CoreLibrary.Models;
 @model CoreLibrary.Models.Cita;
 
 @{
     ViewData["Title"] = "Cita";
-    // Usuario? UsuarioLogeado = ViewData["UsuarioLogeado"] as Usuario;
 }
 
-@* <h2>@ViewData["Title"]</h2>
+<h2>@ViewData["Title"]</h2>
 
 <b>@Html.DisplayNameFor(model => model.Id)</b>
 
 <p>@Model.Id</p>
 
-<b>@Html.DisplayNameFor(model => model.TipoAuto)</b>
+<b>@Html.DisplayNameFor(model => model.Estado)</b> <br>
 
-<p>@Model.TipoAuto</p>
-
-<b>@Html.DisplayNameFor(model => model.Fecha)</b>
-
-<p>@Model.Fecha</p>
-
-<b>@Html.DisplayNameFor(model => model.Hora)</b>
-
-<p>@Model.Hora</p>
-
-<hr>
-
-@if (Model.usuario != null)
+@using (Html.BeginForm("CambiarEstado", "Cita", FormMethod.Post, new { @class = "form" }))
 {
-    <h3>Usuario</h3>
-
-    <b>@Html.DisplayNameFor(model => model.usuario.Nombre)</b>
-
-    <p>@(Model.usuario.Nombre) @(Model.usuario.Apellidos)</p>
-
-    <b>@Html.DisplayNameFor(model => model.usuario.Email)</b>
-
-    <p>@Model.usuario.Email</p>
+    <input type="hidden" name="id" value="@Model.Id">
+    <select asp-for="Estado" name="Estado" onchange="this.form.submit()" class="form-control">
+        @foreach (var estado in Enum.GetValues(typeof(EstadoCita)))
+        {
+            <option value="@estado">@estado</option>
+        }
+    </select>
 }
 
 <hr>
 
-@if (Model.TipoLavado != null)
+<h3>Vehiculo</h3>
+
+<b>@Html.DisplayNameFor(model => model.Vehiculo.Placa)</b>
+
+<p>@Model.Vehiculo.Placa</p>
+
+<b>@Html.DisplayNameFor(model => model.Vehiculo.Modelo)</b>
+
+<p>@Model.Vehiculo.Modelo</p>
+
+<b>@Html.DisplayNameFor(model => model.Vehiculo.Marca)</b>
+
+<p>@Model.Vehiculo.Marca</p>
+
+<b>@Html.DisplayNameFor(model => model.Vehiculo.Tipo)</b>
+
+<p>@Model.Vehiculo.Tipo</p>
+
+<b>@Html.DisplayNameFor(model => model.Vehiculo.Color)</b>
+
+<p>@Model.Vehiculo.Color</p>
+
+<hr>
+
+@if (Model.Cliente != null)
 {
-    <h3>Lavado</h3>
+    <h3>Usuario</h3>
 
-    <b>@Html.DisplayNameFor(model => model.TipoLavado.Nombre)</b>
+    <b>@Html.DisplayNameFor(model => model.Cliente.NombreCompleto)</b>
 
-    <p>@Model.TipoLavado.Nombre</p>
+    <p>@Model.Cliente.NombreCompleto</p>
 
-    <b>@Html.DisplayNameFor(model => model.TipoLavado.Descripcion)</b>
+    <b>@Html.DisplayNameFor(model => model.Cliente.Telefono)</b>
 
-    <p>@Model.TipoLavado.Descripcion</p>
+    <p>@Model.Cliente.Telefono</p>
 
-    <b>@Html.DisplayNameFor(model => model.TipoLavado.Duracion)</b>
+    <b>@Html.DisplayNameFor(model => model.Cliente.Correo)</b>
 
-    <p>@Model.TipoLavado.Duracion</p>
+    <p>@Model.Cliente.Correo</p>
+}
 
-    <b>@Html.DisplayNameFor(model => model.TipoLavado.Precio)</b>
+<hr>
 
-    <p>@Model.TipoLavado.Precio</p>
-} *@
-
-@* @if (UsuarioLogeado != null && UsuarioLogeado.Rol == Roles.Administrador) *@
+@if (Model.CitasServicios.Count > 0)
 {
-    <hr>
-    @* @using (Html.BeginForm("ToggleRealizada", "Cita", FormMethod.Post)) *@
-    @* { *@
-    @*     <input type="hidden" name="Id" id="Id" value="@Model.Id"/> *@
-    @*     <input type="hidden" name="Realizada" id="Realizada" value="@(!Model.Realizada ? 1 : 0)"/> *@
-    @*     <input type="submit" class="btn @(!Model.Realizada ? "btn-success" : "btn-danger")" value="Marcar Como @(!Model.Realizada ? "Realizado" : "Pendiente")" /> *@
-    @* } *@
+    <h3>Servicio</h3>
+    
+    <b>@Html.DisplayNameFor(model => model.CitasServicios.First().Servicio.Nombre)</b>
+
+    <p>@Model.CitasServicios.First().Servicio.Nombre</p>
+
+    <b>@Html.DisplayNameFor(model => model.CitasServicios.First().Servicio.Descripcion)</b>
+
+    <p>@Model.CitasServicios.First().Servicio.Descripcion</p>
+
+    <b>@Html.DisplayNameFor(model => model.CitasServicios.First().Servicio.Precio)</b>
+
+    <p>@Model.CitasServicios.First().Servicio.Precio</p>
+
+    <b>@Html.DisplayNameFor(model => model.CitasServicios.First().Servicio.Duracion)</b>
+
+    <p>@Model.CitasServicios.First().Servicio.Duracion</p>
 }
