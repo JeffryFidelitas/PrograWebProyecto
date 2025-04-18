@@ -42,7 +42,7 @@
 						<li class="sidebar-item">
 							<a asp-action="Index" asp-controller="Home" class="sidebar-link">
 								<i class="bi bi-grid-fill"></i>
-								<span>Dashboard</span>
+								<span>Inicio</span>
 							</a>
 						</li>
 
@@ -73,7 +73,7 @@
 						@if (RoleHelper.EsCliente(User))
 						{
 							<li class="sidebar-item">
-								<a href="/MisPedidos" class="sidebar-link">
+								<a asp-action="Index" asp-controller="Cita" class="sidebar-link">
 									<i class="bi bi-calendar-check"></i>
 									<span>Mis Citas</span>
 								</a>

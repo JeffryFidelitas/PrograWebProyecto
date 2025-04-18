@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\bryan\\Source\\Repos\\PrograWebProyecto\\CoreLibrary\\CoreLibrary.csproj": {}
+    "C:\\Users\\bryan\\source\\repos\\PrograWebProyecto\\CoreLibrary\\CoreLibrary.csproj": {}
   },
   "projects": {
-    "C:\\Users\\bryan\\Source\\Repos\\PrograWebProyecto\\CoreLibrary\\CoreLibrary.csproj": {
+    "C:\\Users\\bryan\\source\\repos\\PrograWebProyecto\\CoreLibrary\\CoreLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\bryan\\Source\\Repos\\PrograWebProyecto\\CoreLibrary\\CoreLibrary.csproj",
+        "projectUniqueName": "C:\\Users\\bryan\\source\\repos\\PrograWebProyecto\\CoreLibrary\\CoreLibrary.csproj",
         "projectName": "CoreLibrary",
-        "projectPath": "C:\\Users\\bryan\\Source\\Repos\\PrograWebProyecto\\CoreLibrary\\CoreLibrary.csproj",
+        "projectPath": "C:\\Users\\bryan\\source\\repos\\PrograWebProyecto\\CoreLibrary\\CoreLibrary.csproj",
         "packagesPath": "C:\\Users\\bryan\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\bryan\\Source\\Repos\\PrograWebProyecto\\CoreLibrary\\obj\\",
         "projectStyle": "PackageReference",
