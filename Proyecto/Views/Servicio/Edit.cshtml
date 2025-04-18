@@ -1,13 +1,13 @@
 ﻿@model CoreLibrary.Models.Servicio
 @{
-    ViewData["Title"] = "Crear Servicio";
+    ViewData["Title"] = "Editar Servicio";
 }
 
 <div class="container py-4">
     <div class="row mb-4">
         <div class="col-md-8">
-            <h1 class="display-4 text-primary"><i class="bi bi-plus-circle me-2"></i>Crear Servicio</h1>
-            <p class="lead text-muted">Añada un nuevo servicio a su catálogo de negocio</p>
+            <h1 class="display-4 text-primary"><i class="bi bi-pencil-square me-2"></i>Editar Servicio</h1>
+            <p class="lead text-muted">Modificar la información del servicio seleccionado</p>
         </div>
         <div class="col-md-4 text-end d-flex align-items-center justify-content-end">
             <a asp-action="Index" class="btn btn-outline-secondary">
@@ -20,10 +20,13 @@
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-body p-4">
-                    <form asp-action="Create">
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
                             <i class="bi bi-exclamation-triangle-fill me-2"></i>Por favor, corrige los errores indicados
                         </div>
+
+                        <input type="hidden" asp-for="Id" />
 
                         <div class="row mb-4">
                             <div class="col-md-6">
@@ -64,6 +67,14 @@
                                     <span asp-validation-for="Duracion" class="text-danger"></span>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mt-4">
+                                    <input class="form-check-input" type="checkbox" asp-for="Activo">
+                                    <label class="form-check-label" asp-for="Activo">
+                                        <i class="bi bi-toggle-on me-1"></i>¿Servicio activo?
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
@@ -71,7 +82,7 @@
                                 <i class="bi bi-x-circle me-1"></i>Cancelar
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save me-1"></i>Guardar Servicio
+                                <i class="bi bi-save me-1"></i>Guardar Cambios
                             </button>
                         </div>
                     </form>
@@ -82,14 +93,13 @@
             <div class="card bg-light shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title"><i class="bi bi-info-circle me-2"></i>Información</h5>
-                    <p class="card-text">Los servicios que se creen estarán disponibles para ser asignados a citas de clientes.</p>
+                    <p class="card-text">Estás editando el servicio <strong>@Model.Nombre</strong>.</p>
                     <hr>
-                    <h6><i class="bi bi-lightbulb me-2"></i>Consejos</h6>
+                    <h6><i class="bi bi-exclamation-triangle me-2"></i>Importante</h6>
                     <ul class="small">
-                        <li>Use nombres claros y descriptivos</li>
-                        <li>Incluya detalles importantes en la descripción</li>
-                        <li>Establezca una duración realista para el servicio</li>
-                        <li>Verifique el precio antes de guardar</li>
+                        <li>Si desactiva este servicio, no estará disponible para nuevas citas</li>
+                        <li>Los cambios en el precio no afectarán a las citas ya programadas</li>
+                        <li>Asegurese de mantener la duración adecuada para planificar correctamente las citas</li>
                     </ul>
                 </div>
             </div>
@@ -103,9 +113,6 @@
     }
     <script>
         $(document).ready(function() {
-            // Enfoque automático en el primer campo
-            $("#Nombre").focus();
-
             // Formateo de precio para mostrar dos decimales
             $("#Precio").on("blur", function() {
                 if ($(this).val()) {

@@ -42,7 +42,7 @@
 						<li class="sidebar-item">
 							<a asp-action="Index" asp-controller="Home" class="sidebar-link">
 								<i class="bi bi-grid-fill"></i>
-								<span>Dashboard</span>
+								<span>Inicio</span>
 							</a>
 						</li>
 
@@ -52,6 +52,13 @@
 								<a href="/GestionUsuarios" class="sidebar-link">
 									<i class="bi bi-people-fill"></i>
 									<span>Gestión de Usuarios</span>
+								</a>
+							</li>
+
+							<li class="sidebar-item">
+								<a asp-action="Index" asp-controller="Servicio" class="sidebar-link">
+									<i class="bi bi-gear-fill"></i>
+									<span>Gestión de servicios</span>
 								</a>
 							</li>
 
@@ -66,7 +73,7 @@
 						@if (RoleHelper.EsCliente(User))
 						{
 							<li class="sidebar-item">
-								<a href="/MisPedidos" class="sidebar-link">
+								<a asp-action="Index" asp-controller="Cita" class="sidebar-link">
 									<i class="bi bi-calendar-check"></i>
 									<span>Mis Citas</span>
 								</a>
