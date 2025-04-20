@@ -1,4 +1,5 @@
 using CoreLibrary.Data;
+using CoreLibrary.Models;
 using CoreLibrary.Services;
 using CoreLibrary.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -15,6 +16,7 @@ builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<ICitaService, CitaService>();
 builder.Services.AddScoped<IServicioService, ServicioService>();
 builder.Services.AddScoped<IVehiculoService, VehiculoService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Agregamos los servicios de autenticacion
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
