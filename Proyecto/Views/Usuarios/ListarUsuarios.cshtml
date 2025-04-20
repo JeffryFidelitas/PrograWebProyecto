@@ -1,0 +1,158 @@
+﻿@model IEnumerable<CoreLibrary.Models.Usuario>
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-4 text-primary"><i class="bi bi-people me-2"></i>Gestión de Usuarios</h1>
+            <p class="lead text-muted">Administrar las cuentas y permisos de los usuarios del sistema</p>
+        </div>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info shadow-sm">
+            <i class="bi bi-info-circle me-2"></i> No hay usuarios registrados. ¡Se debe crear el primero!
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="px-4">
+                                    <i class="bi bi-person-badge me-2"></i>@Html.DisplayNameFor(model => model.Nombre)
+                                </th>
+                                <th>
+                                    <i class="bi bi-person-lines-fill me-2"></i>@Html.DisplayNameFor(model => model.Apellido)
+                                </th>
+                                <th>
+                                    <i class="bi bi-envelope me-2"></i>@Html.DisplayNameFor(model => model.Correo)
+                                </th>
+                                <th>
+                                    <i class="bi bi-shield-lock me-2"></i>@Html.DisplayNameFor(model => model.Rol)
+                                </th>
+                                <th>
+                                    <i class="bi bi-calendar-check me-2"></i>@Html.DisplayNameFor(model => model.FechaRegistro)
+                                </th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="px-4 fw-bold">
+                                        @Html.DisplayFor(modelItem => item.Nombre)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Apellido)
+                                    </td>
+                                    <td>
+                                        <a href="mailto:@item.Correo" class="text-decoration-none">
+                                            <i class="bi bi-envelope-fill me-1 text-muted"></i>@Html.DisplayFor(modelItem => item.Correo)
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @{
+                                            string badgeClass = "";
+                                            string iconClass = "";
+
+                                            switch (item.Rol.ToString())
+                                            {
+                                                case "Administrador":
+                                                    badgeClass = "bg-primary";
+                                                    break;
+                                                case "Empleado":
+                                                    badgeClass = "bg-success";
+                                                    break;
+                                                case "Cliente":
+                                                    badgeClass = "bg-warning text-dark";
+                                                    break;
+                                                default:
+                                                    badgeClass = "bg-secondary";
+                                                    iconClass = "bi-person";
+                                                    break;
+                                            }
+                                        }
+
+                                        <span class="badge @badgeClass">
+                                            <i class="bi @iconClass me-1"></i>@Html.DisplayFor(modelItem => item.Rol)
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <i class="bi bi-clock-history text-muted me-1"></i>@item.FechaRegistro.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="EditarUsuario" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="Editar usuario">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id" title="Eliminar usuario">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+
+                                        <!-- Modal de Confirmación de Eliminación -->
+                                        <div class="modal fade" id="deleteModal-@item.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@item.Id" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content border-danger">
+                                                    <div class="modal-header bg-danger bg-opacity-10 text-danger border-bottom-0">
+                                                        <h5 class="modal-title" id="deleteModalLabel-@item.Id">
+                                                            <i class="bi bi-exclamation-triangle me-2"></i>
+                                                            Eliminar Usuario
+                                                        </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>¿Está seguro que desea eliminar al usuario <strong>@item.Nombre @item.Apellido</strong>?</p>
+                                                        <p class="text-muted small mb-0">Esta acción no se puede deshacer.</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                            <i class="bi bi-x-circle me-1"></i>Cancelar
+                                                        </button>
+                                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">
+                                                            <i class="bi bi-trash me-1"></i>Eliminar
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-end">
+            <p class="text-muted small">Mostrando @Model.Count() usuarios</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Activar tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+
+            // Añadir efecto de hover a las filas
+            $('tbody tr').hover(
+                function() { $(this).addClass('bg-light'); },
+                function() { $(this).removeClass('bg-light'); }
+            );
+        });
+    </script>
+}

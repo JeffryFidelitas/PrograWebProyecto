@@ -49,9 +49,15 @@
 						@if (RoleHelper.EsAdmin(User) || RoleHelper.EsEmpleado(User))
 						{
 							<li class="sidebar-item">
-								<a href="/GestionUsuarios" class="sidebar-link">
+								<a asp-action="ListarUsuarios" asp-controller="Usuarios" class="sidebar-link">
 									<i class="bi bi-people-fill"></i>
 									<span>Gestión de Usuarios</span>
+								</a>
+							</li>
+							<li class="sidebar-item">
+								<a asp-action="Index" asp-controller="Cita" class="sidebar-link">
+									<i class="bi bi-calendar-check-fill"></i>
+									<span>Gestión de Citas</span>
 								</a>
 							</li>
 
