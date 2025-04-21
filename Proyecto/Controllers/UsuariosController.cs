@@ -290,7 +290,74 @@ public async Task<IActionResult> EditarUsuario([Bind("Id,Nombre,Apellido,Telefon
         ModelState.AddModelError(string.Empty, "Ha ocurrido un error al actualizar el usuario.");
         return View(viewModel);
     }
-}
+    }
+        [HttpGet]
+        [Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> EliminarUsuario(int id)
+        {
+            // Verificar que el usuario a eliminar existe
+            var usuario = await _usuarioService.ObtenerPorIdAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            // Verificar que no se está intentando eliminar al propio usuario administrador
+            var usuarioActualId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (usuarioActualId == id)
+            {
+                TempData["ErrorMessage"] = "No puedes eliminar tu propia cuenta de administrador.";
+                return RedirectToAction(nameof(ListarUsuarios));
+            }
+
+            return View(usuario);
+        }
+
+        [HttpPost, ActionName("EliminarUsuario")]
+        [Authorize(Roles = "Administrador")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmarEliminarUsuario(int id)
+        {
+            try
+            {
+                // Verificar que el usuario a eliminar existe
+                var usuario = await _usuarioService.ObtenerPorIdAsync(id);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+
+                // Verificar que no se está intentando eliminar al propio usuario administrador
+                var usuarioActualId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+                if (usuarioActualId == id)
+                {
+                    TempData["ErrorMessage"] = "No puedes eliminar tu propia cuenta de administrador.";
+                    return RedirectToAction(nameof(ListarUsuarios));
+                }
+
+                // Si el usuario es cliente, también eliminar sus datos de la tabla Cliente
+                if (usuario.Rol == Roles.Cliente)
+                {
+                    var cliente = await _usuarioService.ObtenerClientePorIdAsync(id);
+                    if (cliente != null)
+                    {
+                        _context.Clientes.Remove(cliente);
+                    }
+                }
+
+                // Eliminar el usuario (asumiendo que el servicio tiene este método)
+                await _usuarioService.EliminarAsync(id);
+
+                TempData["SuccessMessage"] = "Usuario eliminado correctamente.";
+                return RedirectToAction(nameof(ListarUsuarios));
+            }
+            catch (Exception ex)
+            {
+                // Loguear el error
+                TempData["ErrorMessage"] = "Ha ocurrido un error al eliminar el usuario.";
+                return RedirectToAction(nameof(ListarUsuarios));
+            }
+        }
 
         #endregion
     }

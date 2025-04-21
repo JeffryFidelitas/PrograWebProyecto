@@ -65,13 +65,13 @@
                                             @Html.DisplayFor(modelItem => item.Descripcion)
                                         }
                                     </td>
-                                    <td class="fw-bold text-success">
+                                    <td class="fw-bold text-success text-center">
                                         @Html.DisplayFor(modelItem => item.Precio)
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         @Html.DisplayFor(modelItem => item.Duracion) min
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         @if (item.Activo)
                                         {
                                             <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Activo</span>
@@ -82,7 +82,7 @@
                                         }
                                     </td>
                                     <td>
-                                        <div class="btn-group" role="group">
+                                        <div class="btn-group, text-center" role="group">
                                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
                                                 <i class="bi bi-pencil"></i>
                                             </a>      
