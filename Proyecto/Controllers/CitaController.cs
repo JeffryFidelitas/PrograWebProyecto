@@ -199,6 +199,8 @@ public class CitaController : Controller
             cita.CitasServicios.Add(citaServicio);
 
             //Envio de confirmacion de cita por email
+            var citaServicios = cita.CitasServicios;
+            decimal total = citaServicios.Sum(cs => cs.Servicio.Precio);
             string emailSubject = "LavaCop - Nueva cita registrada";
 
             string emailBody = $@"
@@ -241,7 +243,44 @@ public class CitaController : Controller
         </p>
     </div>";
 
+            string facturaHtml = $@"
+    <div style='font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #fefefe;'>
+
+        <h2 style='color: #2c3e50; text-align: center;'>LavaCop - Factura de tu cita</h2>
+        <p style='font-size: 16px;'>Hola {cita.Cliente.NombreCompleto},<br/>Gracias por agendar tu cita. Aquí está el detalle de los servicios facturados:</p>
+
+        <table style='width: 100%; border-collapse: collapse; margin-top: 20px;'>
+            <thead>
+                <tr style='background-color: #f2f2f2;'>
+                    <th style='text-align: left; padding: 8px;'>Servicio</th>
+                    <th style='text-align: right; padding: 8px;'>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {string.Join("", citaServicios.Select(cs => $@"
+                    <tr>
+                        <td style='padding: 8px; border-bottom: 1px solid #eee;'>{cs.Servicio.Nombre}</td>
+                        <td style='padding: 8px; text-align: right; border-bottom: 1px solid #eee;'>${cs.Servicio.Precio:N2}</td>
+                    </tr>
+                "))}
+                <tr>
+                    <td style='padding: 8px; font-weight: bold;'>Total</td>
+                    <td style='padding: 8px; text-align: right; font-weight: bold;'>${total:N2}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p style='margin-top: 20px; font-size: 14px; color: #777;'>Fecha y hora de la cita: <strong>{cita.FechaHora:dddd, dd MMMM yyyy HH:mm}</strong></p>
+
+        <hr style='margin-top: 30px;' />
+        <p style='font-size: 14px; color: #888;'>Car Wash Online<br/>
+        📍 Av. Siempre Limpio 123<br/>
+        📞 (123) 456-7890<br/>
+        ✉️ lavacorpinfo@gmail.com</p>
+    </div>";
+
             await _emailService.SendEmailAsync(usuario.Correo, emailSubject, emailBody);
+            await _emailService.SendEmailAsync(cita.Cliente.Correo, "LavaCop - Factura de tu cita", facturaHtml);
 
             await _citaService.ActualizarAsync(cita);
 
@@ -315,7 +354,7 @@ public class CitaController : Controller
         </p>
     </div>";
 
-            await _emailService.SendEmailAsync(cliente.Correo, "Estado de tu cita actualizado", emailBody);
+            await _emailService.SendEmailAsync(cliente.Correo, "LavaCop - Estado de tu cita actualizado", emailBody);
         }
         return RedirectToAction("Details", "Cita", new { id = Id });
     }
