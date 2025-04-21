@@ -1,0 +1,37 @@
+﻿@model CoreLibrary.Models.ViewModels.ViewModel_CambiarContrasena
+
+<div class="modal fade" id="modalCambiarContrasena" tabindex="-1" aria-labelledby="modalCambiarContrasenaLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<form asp-action="CambiarContrasena" method="post" asp-antiforgery="true" class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalCambiarContrasenaLabel">Cambiar Contraseña</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+			</div>
+			<div class="modal-body">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+				<div class="mb-3">
+					<label asp-for="ContrasenaActual" class="form-label"></label>
+					<input asp-for="ContrasenaActual" class="form-control" />
+					<span asp-validation-for="ContrasenaActual" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label asp-for="NuevaContrasena" class="form-label"></label>
+					<input asp-for="NuevaContrasena" class="form-control" />
+					<span asp-validation-for="NuevaContrasena" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label asp-for="ConfirmarContrasena" class="form-label"></label>
+					<input asp-for="ConfirmarContrasena" class="form-control" />
+					<span asp-validation-for="ConfirmarContrasena" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="submit" class="btn btn-success">Actualizar contraseña</button>
+			</div>
+		</form>
+	</div>
+</div>

@@ -35,5 +35,12 @@ namespace CoreLibrary.Auth
 
         public static bool EsCliente(ClaimsPrincipal user) =>
             user?.IsInRole(RolesNames.Cliente) ?? false;
+
+        public static int? ObtenerId(ClaimsPrincipal user)
+        {
+            var claim = user?.FindFirst(ClaimTypes.NameIdentifier);
+            return int.TryParse(claim?.Value, out var id) ? id : null;
+        }
+
     }
 }

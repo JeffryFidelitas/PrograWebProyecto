@@ -136,7 +136,7 @@ namespace CoreLibrary.Data
                     Nombre = "Randall",
                     Apellido = "Montero",
                     Correo = "randall@gmail.com",
-                    Contrasenna = "12",
+                    Contrasenna = "Pass123",
                     Rol = Roles.Administrador,
                     FechaRegistro = new DateTime(2025, 4, 7, 12, 0, 0)
                 },
@@ -146,7 +146,7 @@ namespace CoreLibrary.Data
                     Nombre = "Jeffrey",
                     Apellido = "Samuel",
                     Correo = "jeffrey@gmail.com",
-                    Contrasenna = "123",
+                    Contrasenna = "Pass123",
                     Rol = Roles.Cliente,
                     FechaRegistro = new DateTime(2025, 4, 7, 12, 0, 0)
                 }
