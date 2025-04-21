@@ -1,104 +1,316 @@
 ﻿@using System.Security.Claims
-@model CoreLibrary.Models.ViewModels.ViewModel_UsuarioPerfilCompleto
+@model CoreLibrary.Models.ViewModels.ViewModel_UsuarioPerfil
 
 @{
-    ViewData["Title"] = "Perfil de Usuario";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Perfil de Usuario";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+	var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
+@section Scripts {
+	<script>
+		// Utilidad para manejar respuestas con fetch
+		async function handleFormSubmit(event, url, modalId, onSuccess) {
+			event.preventDefault();
+
+			const form = event.target;
+			const formData = new FormData(form);
+
+			try {
+				const response = await fetch(url, {
+					method: 'POST',
+					body: formData
+				});
+
+				if (!response.ok) throw new Error("Error al procesar la solicitud");
+
+				const result = await response.json(); // Asegúrate que tus controladores devuelvan JSON
+
+				if (result.success) {
+					if (onSuccess) onSuccess(result);
+					const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
+					modal.hide();
+				} else {
+					alert(result.message || "Ocurrió un error.");
+				}
+			} catch (error) {
+				console.error(error);
+				alert("Error en la solicitud.");
+			}
+		}
+	</script>
+}
+
+
 <section class="mt-4">
-    <div class="col-md-12">
-        <div class="card shadow">
-            <div class="card-header text-white">
-                <h4 class="card-title mb-0">Mi Perfil</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <!-- Menú de pestañas -->
-                    <div class="col-md-3 border-end">
-                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
-                             aria-orientation="vertical">
-                            <a class="nav-link active" id="v-pills-info-tab" data-bs-toggle="pill"
-                               href="#v-pills-info" role="tab" aria-controls="v-pills-info"
-                               aria-selected="true">Información</a>
+	<div class="col-md-12">
+		<div class="card shadow">
+			<div class="card-header text-white">
+				<h4 class="card-title mb-0">Mi Perfil</h4>
+			</div>
+			<div class="card-body">
+				<div class="row">
 
-                            <!-- Mis vehículos -->
-                            <a class="nav-link" id="v-pills-vehiculos-tab" data-bs-toggle="pill"
-                               href="#v-pills-vehiculos" role="tab" aria-controls="v-pills-vehiculos"
-                               aria-selected="false">Mis Vehículos</a>
+					<!-- Menú de pestañas -->
+					<div class="col-md-3 border-end">
+						<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+							<a class="nav-link active" id="v-pills-info-tab" data-bs-toggle="pill" href="#v-pills-info" role="tab" aria-controls="v-pills-info" aria-selected="true">
+								<i class="fa fa-user me-2"></i> Información
+							</a>
+							<a class="nav-link" id="v-pills-vehiculos-tab" data-bs-toggle="pill" href="#v-pills-vehiculos" role="tab" aria-controls="v-pills-vehiculos" aria-selected="false">
+								<i class="fa fa-car me-2"></i> Mis Vehículos
+							</a>
+							<a class="nav-link" id="v-pills-config-tab" data-bs-toggle="pill" href="#v-pills-config" role="tab" aria-controls="v-pills-config" aria-selected="false">
+								<i class="fa fa-cog me-2"></i> Configuración
+							</a>
+						</div>
+					</div>
 
-                            <a class="nav-link" id="v-pills-config-tab" data-bs-toggle="pill"
-                               href="#v-pills-config" role="tab" aria-controls="v-pills-config"
-                               aria-selected="false">Configuración</a>
-                        </div>
-                    </div>
+					<!-- Contenido de pestañas -->
+					<div class="col-md-9">
+						<div class="tab-content" id="v-pills-tabContent">
 
-                    <!-- Contenido de pestañas -->
-                    <div class="col-md-9">
-                        <div class="tab-content" id="v-pills-tabContent">
-                            <!-- Información -->
-                            <div class="tab-pane fade show active" id="v-pills-info" role="tabpanel" aria-labelledby="v-pills-info-tab">
-                                <h5 class="mb-3">Información Personal</h5>
+							<!-- Información -->
+							<div class="tab-pane fade show active" id="v-pills-info" role="tabpanel" aria-labelledby="v-pills-info-tab">
+								<h5 class="mb-3">Información Personal</h5>
+								<div class="card">
+									<div class="card-body">
+										<h6 class="card-subtitle mb-3 text-muted">Detalles personales</h6>
+										<p><strong>Nombre:</strong> @Model.NombreCompleto</p>
+										<p><strong>Email:</strong> @Model.Correo</p>
+										<p><strong>Teléfono:</strong> @Model.Telefono</p>
+									</div>
+								</div>
+							</div>
 
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h6 class="card-subtitle mb-3 text-muted">Detalles personales</h6>
-                                        <p><strong>Nombre:</strong> @Model.NombreCompleto</p>
-                                        <p><strong>Email:</strong> @Model.Correo</p>
-                                        <p><strong>Teléfono:</strong> @Model.Telefono</p>
-                                    </div>
-                                </div>
-                            </div>
+							<!-- Mis Vehículos -->
+							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
+								<h5 class="mb-3">Mis Vehículos</h5>
+								<button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarVehiculo">
+									<i class="fa fa-plus"></i> Agregar Vehículo
+								</button>
 
-                            <!-- Mis vehículos -->
-                            <div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
-                                <h5 class="mb-3">Mis Vehículos</h5>
+								@if (Model.Vehiculos != null && Model.Vehiculos.Any())
+								{
+									<div class="row">
+										@foreach (var vehiculo in Model.Vehiculos)
+										{
+											<div class="col-md-4 mb-4">
+												<div class="card">
+													<div class="card-body">
+														<h5 class="card-title">@vehiculo.Marca @vehiculo.Modelo</h5>
+														<p><strong>Placa:</strong> @vehiculo.Placa</p>
+														<p><strong>Color:</strong> @vehiculo.Color</p>
+														<p><strong>Tipo:</strong> @vehiculo.Tipo</p>
+														<button class="btn btn-sm btn-outline-secondary btn-editar-vehiculo"
+																data-id="@vehiculo.Id"
+																data-placa="@vehiculo.Placa"
+																data-marca="@vehiculo.Marca"
+																data-modelo="@vehiculo.Modelo"
+																data-color="@vehiculo.Color"
+																data-tipo="@vehiculo.Tipo"
+																data-bs-toggle="modal"
+																data-bs-target="#modalEditarVehiculo">
+															<i class="fa fa-edit"></i> Editar
+														</button>
+													</div>
+												</div>
+											</div>
+										}
+									</div>
+								}
+							</div>
 
-                                @if (Model.Vehiculos != null && Model.Vehiculos.Any())
-                                {
-                                    <div class="row">
-                                        @foreach (var vehiculo in Model.Vehiculos)
-                                        {
-                                            <div class="col-md-4 mb-4">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">@vehiculo.Marca @vehiculo.Modelo</h5>
-                                                        <p><strong>Placa:</strong> @vehiculo.Placa</p>
-                                                        <p><strong>Marca:</strong> @vehiculo.Marca</p>
-                                                        <p><strong>Modelo:</strong> @vehiculo.Modelo</p>
-                                                        <p><strong>Color:</strong> @vehiculo.Color</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="alert alert-info" role="alert">
-                                        No tienes vehículos registrados. ¡Agrega uno para comenzar!
-                                    </div>
-                                }
-                            </div>
+							<!-- Configuración -->
+							<div class="tab-pane fade" id="v-pills-config" role="tabpanel" aria-labelledby="v-pills-config-tab">
+								<h5 class="mb-3">Configuración de Cuenta</h5>
+								<p>Puedes personalizar tu cuenta o cambiar la contraseña.</p>
+								<div class="d-flex flex-column gap-2">
+									<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEditarInfo">
+										<i class="fa fa-user-edit me-2"></i> Editar información personal
+									</button>
+									<button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalCambiarContrasena">
+										<i class="fa fa-key me-2"></i> Cambiar contraseña
+									</button>
+								</div>
+							</div>
 
-
-                            <!-- Configuración -->
-                            <div class="tab-pane fade" id="v-pills-config" role="tabpanel"
-                                 aria-labelledby="v-pills-config-tab">
-                                <h5 class="mb-3">Configuración de Cuenta</h5>
-                                <p>Puedes personalizar tu cuenta o cambiar la contraseña.</p>
-                                <ul>
-                                    <li><a href="#">Actualizar contraseña</a></li>
-                                    <li><a href="#">Editar información personal</a></li>
-                                    <li><a href="#">Cerrar sesión en todos los dispositivos</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- row -->
-            </div> <!-- card-body -->
-        </div> <!-- card -->
-    </div>
+						</div> <!-- tab-content -->
+					</div>
+				</div> <!-- row -->
+			</div> <!-- card-body -->
+		</div> <!-- card -->
+	</div>
 </section>
+
+<div class="modal fade" id="modalEditarVehiculo" tabindex="-1" aria-labelledby="modalEditarVehiculoLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<form id="formEditarVehiculo" class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalEditarVehiculoLabel">Editar Vehículo</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" name="Id" id="input-Id" />
+
+				@foreach (var campo in new[] { "Placa", "Marca", "Modelo", "Color", "Tipo" })
+				{
+					<div class="form-floating mb-3">
+						<input type="text" class="form-control" name="@campo" id="input-@campo" placeholder="@campo" required />
+						<label for="input-@campo">@campo</label>
+					</div>
+				}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="submit" class="btn btn-primary">Guardar cambios</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const modalEditarVehiculo = document.getElementById('modalEditarVehiculo');
+
+		modalEditarVehiculo.addEventListener('show.bs.modal', function (event) {
+			const button = event.relatedTarget;
+
+			// Cargar datos desde atributos data-*
+			document.getElementById('input-Id').value = button.getAttribute('data-id');
+			document.getElementById('input-Placa').value = button.getAttribute('data-placa');
+			document.getElementById('input-Marca').value = button.getAttribute('data-marca');
+			document.getElementById('input-Modelo').value = button.getAttribute('data-modelo');
+			document.getElementById('input-Color').value = button.getAttribute('data-color');
+			document.getElementById('input-Tipo').value = button.getAttribute('data-tipo');
+		});
+	});
+</script>
+
+<script>
+	document.getElementById("formEditarVehiculo").addEventListener("submit", function (e) {
+		handleFormSubmit(e, '/Vehiculo/EditarVehiculo', 'modalEditarVehiculo', (result) => {
+			setTimeout(() => {
+			location.reload();
+		}, 200);
+		});
+	});
+</script>
+
+<!-- Modal para agregar un nuevo vehículo -->
+<div class="modal fade" id="modalAgregarVehiculo" tabindex="-1" aria-labelledby="modalAgregarVehiculoLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<form id="formAgregarVehiculo" class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalAgregarVehiculoLabel">Agregar Nuevo Vehículo</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+			</div>
+			<div class="modal-body">
+				@foreach (var campo in new[] { "Placa", "Marca", "Modelo", "Color", "Tipo" })
+				{
+					<div class="form-floating mb-3">
+						<input type="text" class="form-control" name="@campo" id="inputAgregar-@campo" placeholder="@campo" required />
+						<label for="inputAgregar@campo">@campo</label>
+					</div>
+				}
+				<input type="hidden" name="UsuarioId" value="@userId" />
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="submit" class="btn btn-success">Agregar Vehículo</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	document.getElementById("formAgregarVehiculo").addEventListener("submit", function (e) {
+		handleFormSubmit(e, '/Vehiculo/NuevoVehiculo', 'modalAgregarVehiculo', (result) => {
+			alert(result.message);
+			setTimeout(() => {
+			location.reload();
+		}, 200);
+		});
+	});
+</script>
+
+<!-- Modal para editar usuario -->
+<div class="modal fade" id="modalEditarInfo" tabindex="-1" aria-labelledby="modalEditarInfoLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<form id="formEditarInfo" class="modal-content" autocomplete="on">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalEditarInfoLabel">Editar Información Personal</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+			</div>
+			<div class="modal-body">
+				<div class="form-floating mb-3">
+					<input type="text" class="form-control" name="Nombre" id="inputNombre" placeholder="Nombre" value="@Model.Nombre" required autocomplete="given-name" />
+					<label for="inputNombre">Nombre</label>
+				</div>
+				<div class="form-floating mb-3">
+					<input type="text" class="form-control" name="Apellido" id="inputApellido" placeholder="Apellido" value="@Model.Apellido" required autocomplete="family-name" />
+					<label for="inputApellido">Apellido</label>
+				</div>
+				<div class="form-floating mb-3">
+					<input type="email" class="form-control" name="Correo" id="inputCorreo" placeholder="Correo electrónico" value="@Model.Correo" required autocomplete="email" />
+					<label for="inputCorreo">Correo electrónico</label>
+				</div>
+				<div class="form-floating mb-3">
+					<input type="tel" class="form-control" name="Telefono" id="inputTelefono" placeholder="Teléfono" value="@Model.Telefono" required autocomplete="tel" />
+					<label for="inputTelefono">Teléfono</label>
+				</div>
+				<input type="hidden" name="Id" value="@userId" />
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="submit" class="btn btn-primary">Guardar cambios</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	document.getElementById("formEditarInfo").addEventListener("submit", function (e) {
+		handleFormSubmit(e, '/Usuarios/ActualizarInformacion', 'modalEditarInfo', (result) => {
+			alert(result.message);
+			setTimeout(() => {
+			location.reload();
+		}, 200);
+		});
+	});
+</script>
+
+<!-- Modal para cambiar la contrasena -->
+<div class="modal fade" id="modalCambiarContrasena" tabindex="-1" aria-labelledby="modalCambiarContrasenaLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<form id="formCambiarContrasena" class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalCambiarContrasenaLabel">Cambiar Contraseña</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+			</div>
+			<div class="modal-body">
+				@foreach (var campo in new[] { "ContrasenaActual", "NuevaContrasena", "ConfirmarContrasena" })
+				{
+					<div class="form-floating mb-3">
+						<input type="password" class="form-control" name="@campo" id="input-@campo" placeholder="@campo" required />
+						<label for="input@campo">@campo.Replace("Contrasena", "Contraseña")</label>
+					</div>
+				}
+				<input type="hidden" name="Id" value="@userId" />
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="submit" class="btn btn-success">Actualizar contraseña</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	document.getElementById("formCambiarContrasena").addEventListener("submit", function (e) {
+		handleFormSubmit(e, '/Usuarios/CambiarContrasena', 'modalCambiarContrasena', (result) => {
+			alert("Contraseña actualizada correctamente.");
+		});
+	});
+</script>
