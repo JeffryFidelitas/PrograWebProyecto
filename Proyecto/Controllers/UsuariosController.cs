@@ -7,16 +7,20 @@ using CoreLibrary.Auth;
 using CoreLibrary.Models;
 using CoreLibrary.Models.ViewModels;
 using CoreLibrary.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using CoreLibrary.Data;
 
 namespace Proyecto.Controllers
 {
     public class UsuariosController : Controller
     {
         private readonly IUsuarioService _usuarioService;
+        private readonly ProyectDBContext _context;
 
-        public UsuariosController(IUsuarioService usuarioService)
+        public UsuariosController(IUsuarioService usuarioService, ProyectDBContext context)
         {
             _usuarioService = usuarioService;
+            _context = context;
         }
 
         #region Autenticación
@@ -217,6 +221,157 @@ namespace Proyecto.Controllers
                 // Loguear el error
                 TempData["ErrorMessage"] = "Ha ocurrido un error al eliminar el usuario.";
                 return RedirectToAction(nameof(ListarUsuarios));
+            }
+        }
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ListarUsuarios()
+        {
+            // Obtener el usuario actual
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var usuarioActual = await _usuarioService.ObtenerPorIdAsync(usuarioId);
+
+            if (usuarioActual == null)
+            {
+                return NotFound();
+            }
+
+            var usuarios = await _usuarioService.ObtenerTodosAsync(usuarioActual);
+            return View(usuarios);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> EditarUsuario(int id)
+        {
+            // Obtener el usuario actual para verificar permisos
+            var usuarioActualId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var rolActual = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            // Solo el administrador puede editar cualquier usuario
+            // Un usuario normal solo puede editar su propio perfil
+            if (rolActual != Roles.Administrador.ToString() && usuarioActualId != id)
+            {
+                return Forbid();
+            }
+
+            var usuario = await _usuarioService.ObtenerPorIdAsync(id);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            // Si el usuario tiene un cliente asociado, obtener su teléfono
+            string telefono = "";
+            if (usuario.Cliente != null)
+            {
+                telefono = usuario.Cliente.Telefono;
+            }
+
+            var viewModel = new ViewModel_UsuarioEditar
+            {
+                Id = usuario.Id,
+                Nombre = usuario.Nombre,
+                Apellido = usuario.Apellido,
+                Telefono = telefono,
+                Correo = usuario.Correo,
+                Rol = usuario.Rol
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditarUsuario([Bind("Id,Nombre,Apellido,Telefono,Correo,Rol")] ViewModel_UsuarioEditar viewModel)
+        {
+            // Obtener el usuario actual para verificar permisos
+            var usuarioActualId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var rolActual = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            // Solo el administrador puede editar cualquier usuario
+            // Un usuario normal solo puede editar su propio perfil
+            if (rolActual != Roles.Administrador.ToString() && usuarioActualId != viewModel.Id)
+            {
+                return Forbid();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            try
+            {
+                var usuario = await _usuarioService.ObtenerPorIdAsync(viewModel.Id);
+
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+
+                // Verificar si el correo ya está en uso por otro usuario (solo si cambió el correo)
+                if (usuario.Correo != viewModel.Correo)
+                {
+                    var usuarioConMismoCorreo = await _usuarioService.BuscarPorCorreo(viewModel.Correo);
+                    if (usuarioConMismoCorreo != null && usuarioConMismoCorreo.Id != viewModel.Id)
+                    {
+                        ModelState.AddModelError("Correo", "El correo ya está siendo utilizado por otro usuario.");
+                        return View(viewModel);
+                    }
+                }
+
+                // Solo el administrador puede cambiar el rol
+                if (rolActual != Roles.Administrador.ToString())
+                {
+                    viewModel.Rol = usuario.Rol; // Mantener el rol original
+                }
+
+                // Actualizar los datos del usuario
+                usuario.Nombre = viewModel.Nombre;
+                usuario.Apellido = viewModel.Apellido;
+                usuario.Correo = viewModel.Correo;
+                usuario.Rol = viewModel.Rol;
+
+                // Actualizar el usuario en la base de datos
+                await _usuarioService.ActualizarAsync(usuario);
+
+                // Si el usuario es de tipo cliente, actualizar también la tabla Cliente
+                if (usuario.Rol == Roles.Cliente)
+                {
+                    var cliente = await _usuarioService.ObtenerClientePorIdAsync(usuario.Id);
+                    if (cliente != null)
+                    {
+                        cliente.NombreCompleto = $"{viewModel.Nombre} {viewModel.Apellido}";
+                        cliente.Telefono = viewModel.Telefono;
+                        cliente.Correo = viewModel.Correo;
+
+                        // Ya que no hay un método específico en el servicio, actualizamos directamente
+                        // Nota: Sería recomendable agregar un método ActualizarClienteAsync en el servicio
+                        _context.Clientes.Update(cliente);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                TempData["SuccessMessage"] = "Usuario actualizado correctamente.";
+
+                // Redireccionar según el rol
+                if (rolActual == Roles.Administrador.ToString())
+                {
+                    return RedirectToAction(nameof(ListarUsuarios));
+                }
+                else
+                {
+                    return RedirectToAction(nameof(PerfilUsuario), new { id = usuario.Id });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Loguear el error
+                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al actualizar el usuario.");
+                return View(viewModel);
             }
         }
         #endregion
