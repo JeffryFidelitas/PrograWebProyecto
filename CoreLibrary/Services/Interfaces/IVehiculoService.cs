@@ -13,5 +13,7 @@ namespace CoreLibrary.Services.Interfaces
     {
         Task CrearAsync(Vehiculo usuario);
         Task<Vehiculo> ObtenerPorPlacaAsync(string placa);
+        Task<(bool Success, string Message)> AgregarVehiculoAsync(Vehiculo vehiculo, Cliente cliente);
+        Task<(bool Success, string Message)> EditarVehiculoAsync(Vehiculo vehiculo, Cliente cliente);
     }
 }

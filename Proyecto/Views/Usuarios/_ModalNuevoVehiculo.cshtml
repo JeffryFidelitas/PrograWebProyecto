@@ -1,0 +1,35 @@
+﻿@model CoreLibrary.Models.Vehiculo
+@{
+}
+<div class="modal fade" id="modalAgregarVehiculo" tabindex="-1" aria-labelledby="modalAgregarVehiculoLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<form asp-action="AgregarVehiculo" method="post" class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalAgregarVehiculoLabel">Agregar Nuevo Vehículo</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+			</div>
+			<div class="modal-body">
+				<div class="mb-3">
+					<label class="form-label">Placa</label>
+					<input type="text" name="Placa" class="form-control" required />
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Marca</label>
+					<input type="text" name="Marca" class="form-control" required />
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Modelo</label>
+					<input type="text" name="Modelo" class="form-control" required />
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Color</label>
+					<input type="text" name="Color" class="form-control" required />
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="submit" class="btn btn-success">Agregar Vehículo</button>
+			</div>
+		</form>
+	</div>
+</div>
