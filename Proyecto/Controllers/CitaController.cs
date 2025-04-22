@@ -165,7 +165,16 @@ public class CitaController : Controller
 
             Cliente cliente = await _usuarioService.ObtenerClientePorIdAsync(usuarioId);
 
-            Vehiculo vehiculo = await _vehiculoService.ObtenerPorPlacaAsync(VehiculoPlaca);
+            Vehiculo? vehiculo = null;
+            try
+            {
+                vehiculo = await _vehiculoService.ObtenerPorPlacaAsync(VehiculoPlaca);
+            }
+            catch (Exception)
+            {
+                vehiculo = null;
+            }
+
             if (vehiculo == null)
             {
                 vehiculo = new Vehiculo();
@@ -197,6 +206,7 @@ public class CitaController : Controller
             citaServicio.ServicioId = ServicioId;
 
             cita.CitasServicios.Add(citaServicio);
+            await _citaService.ActualizarAsync(cita);
 
             //Envio de confirmacion de cita por email
             var citaServicios = cita.CitasServicios;
@@ -282,9 +292,7 @@ public class CitaController : Controller
             await _emailService.SendEmailAsync(usuario.Correo, emailSubject, emailBody);
             await _emailService.SendEmailAsync(cita.Cliente.Correo, "LavaCop - Factura de tu cita", facturaHtml);
 
-            await _citaService.ActualizarAsync(cita);
-
-            return View(cita);
+            return RedirectToAction("Index");
         }
         catch (Exception)
         {
