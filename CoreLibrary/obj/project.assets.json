@@ -4703,24 +4703,31 @@
     ]
   },
   "packageFolders": {
-    "/home/tentri/.nuget/packages/": {}
+    "C:\\Users\\bryan\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/tentri/Documents/PrograWebProyecto/CoreLibrary/CoreLibrary.csproj",
+      "projectUniqueName": "C:\\Users\\bryan\\Source\\Repos\\PrograWebProyecto\\CoreLibrary\\CoreLibrary.csproj",
       "projectName": "CoreLibrary",
-      "projectPath": "/home/tentri/Documents/PrograWebProyecto/CoreLibrary/CoreLibrary.csproj",
-      "packagesPath": "/home/tentri/.nuget/packages/",
-      "outputPath": "/home/tentri/Documents/PrograWebProyecto/CoreLibrary/obj/",
+      "projectPath": "C:\\Users\\bryan\\Source\\Repos\\PrograWebProyecto\\CoreLibrary\\CoreLibrary.csproj",
+      "packagesPath": "C:\\Users\\bryan\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\bryan\\Source\\Repos\\PrograWebProyecto\\CoreLibrary\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/home/tentri/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\bryan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4738,7 +4745,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -4775,7 +4783,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/sdk/dotnet8/lib/sdk/8.0.408/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
